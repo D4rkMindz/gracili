@@ -2,7 +2,6 @@
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/D4rkMindz/gracili/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/D4rkMindz/gracili/?branch=master)
 [![Build Status](https://travis-ci.org/D4rkMindz/gracili.svg?branch=master)](https://travis-ci.org/D4rkMindz/gracili)
-[![StyleCI](https://styleci.io/repos/127299959/shield?branch=master)](https://styleci.io/repos/127299959)
 [![Code Coverage](https://scrutinizer-ci.com/g/D4rkMindz/gracili/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/D4rkMindz/gracili/?branch=master)
 
 ----
