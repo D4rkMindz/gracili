@@ -1,10 +1,10 @@
 <?php
-$config['displayErrorDetails'] = true;
+$env['displayErrorDetails'] = true;
 
-$env['db_test']['host'] = '';
-$env['db_test']['port'] = '';
-$env['db_test']['username'] = '';
-$env['db_test']['password'] = '';
+$env['db']['host'] = '';
+$env['db']['port'] = '';
+$env['db']['username'] = '';
+$env['db']['password'] = '';
 
 $env['db_test']['host'] = '127.0.0.1';
 $env['db_test']['port'] = '3306';
