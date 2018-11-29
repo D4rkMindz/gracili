@@ -2,21 +2,21 @@
 
 namespace App\Controller;
 
-use Aura\Session\Segment;
-use Aura\Session\Session;
+use App\Service\Logger\Logger;
+use App\Util\ValidationResult;
 use Interop\Container\Exception\ContainerException;
-use Monolog\Logger;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Container;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
 use Slim\Views\Twig;
+use Twig_Environment;
 
 /**
  * Class AppController.
  */
-class AppController
+abstract class AppController
 {
     /**
      * @var Request
@@ -29,11 +29,6 @@ class AppController
     protected $response;
 
     /**
-     * @var Segment
-     */
-    protected $session;
-
-    /**
      * @var Router
      */
     protected $router;
@@ -44,14 +39,10 @@ class AppController
     protected $logger;
 
     /**
-     * @var Twig
+     * @var Twig_Environment
      */
     protected $twig;
 
-    /**
-     * @var Session
-     */
-    private $sessionHandler;
 
     /**
      * AppController constructor.
@@ -64,37 +55,9 @@ class AppController
     {
         $this->request = $container->get('request');
         $this->response = $container->get('response');
-        $this->sessionHandler = $container->get(Session::class);
-        $this->session = $this->sessionHandler->getSegment('app');
         $this->router = $container->get('router');
-        $this->logger = $container->get(Logger::class);
-        $this->twig = $container->get(Twig::class);
-    }
-
-    /**
-     * Render HTML.
-     *
-     * @param Response $response
-     * @param Request $request
-     * @param string $file
-     * @param array $viewData
-     *
-     * @return ResponseInterface
-     */
-    protected function render(
-        Response $response,
-        Request $request,
-        string $file,
-        array $viewData = []
-    ): ResponseInterface {
-        $extend = [
-            'language' => $request->getAttribute('language'),
-            'page' => 'Slim Application',
-            'is_logged_in' => $this->session->get('logged_in') ?: false,
-        ];
-        $viewData = array_replace_recursive($extend, $viewData);
-
-        return $this->twig->render($response, $file, $viewData);
+        $this->logger = new Logger('application');
+        $this->twig = $container->get(Twig_Environment::class);
     }
 
     /**
@@ -108,6 +71,7 @@ class AppController
      */
     protected function json(Response $response, $data, int $status = 200): ResponseInterface
     {
+        $data['success'] = array_value('success', $data) ?: true;
         return $response->withJson($data, $status);
     }
 
@@ -120,8 +84,58 @@ class AppController
      *
      * @return ResponseInterface
      */
-    public function redirect(Response $response, string $url, int $status = 301): ResponseInterface
+    protected function redirect(Response $response, string $url, int $status = 301): ResponseInterface
     {
         return $response->withRedirect($url, $status);
+    }
+
+    /**
+     * Return a validation error.
+     *
+     * @param Response $response
+     * @param ValidationResult $validationContext
+     * @param int $status
+     * @return ResponseInterface
+     */
+    protected function validationError(Response $response, ValidationResult $validationContext, int $status = 422): ResponseInterface
+    {
+        return $this->error($response, $validationContext->toArray(), $status);
+    }
+
+    /**
+     * Return an error.
+     *
+     * @param Response $response
+     * @param array $data
+     * @param int $status
+     * @return ResponseInterface
+     */
+    protected function error(Response $response, array $data, int $status = 422): ResponseInterface
+    {
+        $data['success'] = array_value('success', $data) ?: false;
+        return $this->json($response, $data, $status);
+    }
+
+    /**
+     * Get the parsed body from JSON.
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    protected function getParsedBody(Request $request)
+    {
+        $json = $request->getBody()->__toString();
+        return json_decode($json, true);
+    }
+
+    /**
+     * Get the current user id.
+     *
+     * @return string
+     */
+    protected function getCurrentUserId()
+    {
+        // TODO
+        return "1";
     }
 }

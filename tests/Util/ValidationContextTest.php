@@ -3,12 +3,12 @@
 namespace App\Test\Util;
 
 use App\Test\BaseTestCase;
-use App\Util\ValidationContext;
+use App\Util\ValidationResult;
 
 /**
  * AppControllerTestCase.
  *
- * @coversDefaultClass \App\Util\ValidationContext
+ * @coversDefaultClass \App\Util\ValidationResult
  * @group actual
  */
 class ValidationContextTest extends BaseTestCase
@@ -20,8 +20,8 @@ class ValidationContextTest extends BaseTestCase
      */
     public function testInstance()
     {
-        $instance = new ValidationContext();
-        $this->assertInstanceOf(ValidationContext::class, $instance);
+        $instance = new ValidationResult();
+        $this->assertInstanceOf(ValidationResult::class, $instance);
         $this->assertSame('Please check your data', $instance->getMessage());
     }
 
@@ -34,7 +34,7 @@ class ValidationContextTest extends BaseTestCase
     {
         $defaultMessage = 'Default message';
         $notDefaultMessage = 'Not default message';
-        $validationContext = new ValidationContext($defaultMessage);
+        $validationContext = new ValidationResult($defaultMessage);
         $this->assertSame($defaultMessage, $validationContext->getMessage());
         $validationContext->setMessage($notDefaultMessage);
         $this->assertSame($notDefaultMessage, $validationContext->getMessage());
@@ -47,7 +47,7 @@ class ValidationContextTest extends BaseTestCase
      */
     public function testError()
     {
-        $validationContext = new ValidationContext();
+        $validationContext = new ValidationResult();
         $validationContext->setError('username', 'Username not valid');
         $validationContext->setError('password', 'Password not valid');
         $expected = [
@@ -70,7 +70,7 @@ class ValidationContextTest extends BaseTestCase
      */
     public function testToArray()
     {
-        $validationContext = new ValidationContext();
+        $validationContext = new ValidationResult();
         $validationContext->setError('username', 'Username not valid');
         $validationContext->setError('password', 'Password not valid');
         $expected = [
@@ -96,7 +96,7 @@ class ValidationContextTest extends BaseTestCase
      */
     public function testFails()
     {
-        $validationContext = new ValidationContext();
+        $validationContext = new ValidationResult();
         $this->assertFalse($validationContext->fails());
         $validationContext->setError('username', 'Username not valid');
         $this->assertTrue($validationContext->fails());
@@ -109,7 +109,7 @@ class ValidationContextTest extends BaseTestCase
      */
     public function testSuccess()
     {
-        $validationContext = new ValidationContext();
+        $validationContext = new ValidationResult();
         $this->assertTrue($validationContext->success());
         $validationContext->setError('username', 'Username not valid');
         $this->assertFalse($validationContext->success());
@@ -122,7 +122,7 @@ class ValidationContextTest extends BaseTestCase
      */
     public function testClear()
     {
-        $validationContext = new ValidationContext();
+        $validationContext = new ValidationResult();
         $validationContext->setError('username', 'Username not valid');
         $validationContext->clear();
         $this->assertNull($validationContext->getMessage());

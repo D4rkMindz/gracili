@@ -20,21 +20,21 @@ $config[Session::class] = [
 ];
 
 $config[Translator::class] = [
-    'locale' => 'de_CH',
+    'locale' => 'en_US',
     'path' => __DIR__ . '/../resources/locale',
 ];
 
 $config['migrations'] = __DIR__ . '/../resources/migrations';
 
 $config['db'] = [
-    'database' => 'slim',
+    'database' => 'gracili',
     'charset' => 'utf8',
     'encoding' => 'utf8',
     'collation' => 'utf8_unicode_ci',
 ];
 
 $config['db_test'] = [
-    'database' => 'slim_test',
+    'database' => 'gracili_test',
     'charset' => 'utf8',
     'encoding' => 'utf8',
     'collation' => 'utf8_unicode_ci',
@@ -54,18 +54,10 @@ $config['twig'] = [
     ],
 ];
 
-$config['session'] = [
-    'name' => 'app_template',
-    'autorefresh' => true,
-    'lifetime' => '2 hours',
-    'path' => '/', //default
-    'domain' => null, //default
-    'secure' => false, //default
-    'httponly' => false, //default
-];
-
-$config['logger'] = [
-    'main' => 'app',
+$config['mailgun'] = [
+  'from' => '',
+  'apikey' => '',
+  'domain' => '',
 ];
 
 return $config;

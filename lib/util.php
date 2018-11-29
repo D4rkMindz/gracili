@@ -8,7 +8,8 @@ use Symfony\Component\Translation\Translator;
  * @param mixed $message
  * @return string
  */
-function __($message) {
+function __($message)
+{
     static $translator = null;
     /* @var $translator Translator */
     if ($message instanceof Translator) {
@@ -22,4 +23,39 @@ function __($message) {
     }
 
     return $translated;
-};
+}
+
+/**
+ * Get array value or null.
+ *
+ * @param string $key
+ * @param array $array
+ * @return mixed|null
+ */
+function array_value(string $key, array $array)
+{
+    return array_key_exists($key, $array) ? $array[$key] : null;
+}
+
+/**
+ * Make an array multidimensional based on the given keys.
+ *
+ * @param $keys
+ * @param $resultValue
+ * @return array
+ */
+function array_make_multidimensional($keys, $resultValue)
+{
+    if (!is_array($keys)) {
+        return $resultValue;
+    }
+    $tmp = [];
+    $index = array_shift($keys);
+    if (!isset($keys[0])) {
+        $tmp[$index] = $resultValue;
+    } else {
+        $tmp[$index] = array_make_multidimensional($keys, $resultValue);
+    }
+
+    return $tmp;
+}

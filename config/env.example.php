@@ -11,9 +11,9 @@ $env['db_test']['port'] = '3306';
 $env['db_test']['username'] = 'root';
 $env['db_test']['password'] = '';
 
-$env['mailgun']['from'] = '';
-$env['mailgun']['apikey'] = '';
-$env['mailgun']['domain'] = '';
+$env['mailgun']['from'] = 'noreply@gracili.com';
+$env['mailgun']['apikey'] = 'your-key';
+$env['mailgun']['domain'] = 'gracili.com';
 
 $env['twig']['assetCache'] ['minify'] = false;
 $env['twig']['assetCache'] ['cache_enabled'] = false;

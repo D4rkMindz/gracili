@@ -56,16 +56,3 @@ $app->add(function (Request $request, Response $response, $next) {
 
     return $response;
 });
-
-/**
- * Session Middleware
- *
- * @return Response
- */
-$app->add(function (Request $request, Response $response, $next) {
-    $session = $this->get(Session::class);
-    $response = $next($request, $response);
-    $session->commit();
-
-    return $response;
-});

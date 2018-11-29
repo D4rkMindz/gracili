@@ -5,7 +5,7 @@ namespace App\Util;
 /**
  * Class ValidationContext.
  */
-class ValidationContext
+class ValidationResult
 {
     protected $message;
     protected $errors = [];

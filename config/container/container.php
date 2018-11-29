@@ -1,15 +1,11 @@
 <?php
 
-use App\Table\UserModel;
-use Aura\Session\Session;
-use Aura\Session\SessionFactory;
 use Cake\Database\Connection;
 use Cake\Database\Driver\Mysql;
-use Interop\Container\Exception\ContainerException;
-use Monolog\Logger;
 use Odan\Twig\TwigAssetsExtension;
 use Odan\Twig\TwigTranslationExtension;
 use Slim\Container;
+use Slim\Exception\ContainerException;
 use Slim\Http\Environment;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -29,7 +25,7 @@ $container['environment'] = function (): Environment {
     $scriptName = $_SERVER['SCRIPT_NAME'];
     $_SERVER['SCRIPT_NAME'] = dirname(dirname($scriptName)) . '/' . basename($scriptName);
 
-    return new Slim\Http\Environment($_SERVER);
+    return new Environment($_SERVER);
 };
 
 /**
@@ -107,35 +103,6 @@ $container[Connection::class] = function (Container $container): Connection {
 };
 
 /**
- * Session container.
- *
- * @param Container $container
- * @return Session
- * @throws ContainerException
- */
-$container[Session::class] = function (Container $container): Session {
-    $factory = new SessionFactory();
-    $cookies = $container->get('request')->getCookieParams();
-    $session = $factory->newInstance($cookies);
-    $settings = $container->get('settings')->get(Session::class);
-    $session->setName($settings['name']);
-    $session->setCacheExpire($settings['cache_expire']);
-
-    return $session;
-};
-
-/**
- * Logger container.
- *
- * @param Container $container
- * @return Logger
- * @throws ContainerException
- */
-$container[Monolog\Logger::class] = function (Container $container) {
-    return new Logger($container->get('settings')->get('logger')['main']);
-};
-
-/**
  * Not found handler.
  *
  * @param Container $container
@@ -143,6 +110,6 @@ $container[Monolog\Logger::class] = function (Container $container) {
  */
 $container['notFoundHandler'] = function (Container $container) {
     return function (Request $request, Response $response) use ($container) {
-        return $response->withRedirect($container->get('router')->pathFor('notFound', ['language' => 'en']));
+        return $response->withStatus(404)->withJson(json_encode(['success' => false, 'message' => __('Not found')]));
     };
 };

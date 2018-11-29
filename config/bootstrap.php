@@ -11,7 +11,7 @@ $settings = require __DIR__ . '/../config/config.php';
 $app = new App(['settings' => $settings]);
 
 // Set up dependencies
-require __DIR__ . '/../config/container.php';
+require __DIR__ . '/../config/container/bootstrap.php';
 
 // Register routes
 require __DIR__ . '/../config/routes.php';
