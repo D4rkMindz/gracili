@@ -1,0 +1,243 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: CEVI-E API\n"
+"POT-Creation-Date: 2022-07-31 16:28+0200\n"
+"PO-Revision-Date: 2022-07-31 16:28+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr_CH\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.0.1\n"
+"X-Poedit-Basepath: ../..\n"
+"X-Poedit-KeywordsList: __\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: vendor\n"
+"X-Poedit-SearchPathExcluded-1: dist\n"
+"X-Poedit-SearchPathExcluded-2: data\n"
+
+#: src/Controller/IndexController.php:52
+msgid "CEVI Web API"
+msgstr "CEVI Web API"
+
+#: src/Repository/UserRepository.php:44 src/Repository/UserRepository.php:93
+msgid "User not found"
+msgstr ""
+
+#: src/Repository/UserRepository.php:117
+msgid "Could not get user by {field} with value {value}"
+msgstr ""
+
+#: src/Service/Auth/AuthService.php:59
+msgid "Username or password invalid"
+msgstr ""
+
+#: src/Service/GeoIP/GeoIPService.php:43
+msgid "Unknown location"
+msgstr ""
+
+#: src/Service/Mailer/AppMailer.php:72
+msgid "Sending an email failed"
+msgstr ""
+
+#: src/Service/Mailer/AuthMailer.php:54
+msgid "Recent login"
+msgstr ""
+
+#: src/Service/Mailer/AuthMailer.php:85
+msgid "Password reset"
+msgstr ""
+
+#: src/Service/Mailer/UserMailer.php:41
+msgid "Thank you for your registration"
+msgstr ""
+
+#: src/Service/Mailer/UserMailer.php:58
+msgid "Thank you for signing up for our newsletter"
+msgstr ""
+
+#: src/Service/Validation/AppValidation.php:38
+msgid "Minimum length is {length}"
+msgstr ""
+
+#: src/Service/Validation/AppValidation.php:53
+msgid "Maximum length is {length}"
+msgstr ""
+
+#: src/Service/Validation/ImageFileValidation.php:34
+msgid "Image cannot be used"
+msgstr ""
+
+#: src/Service/Validation/ImageFileValidation.php:56
+msgid "Only {types} are allowed file types"
+msgstr ""
+
+#: src/Service/Validation/ImageFileValidation.php:76
+msgid "The maximum allowed file size is {size}MB"
+msgstr ""
+
+#: src/Service/Validation/ImageFileValidation.php:95
+msgid ""
+"The following characters are NOT allowed in the file name: \"\\\" \"/\" \":"
+"\" \"*\" \"?\" \"<\" \">\" \"|\" and \" (quotation mark). Please rename your "
+"file"
+msgstr ""
+
+#: src/Service/Validation/UserValidation.php:42
+#: src/Service/Validation/UserValidation.php:148
+msgid "Please check your data"
+msgstr ""
+
+#: src/Service/Validation/UserValidation.php:64
+#: src/Service/Validation/UserValidation.php:241
+msgid "Email is not valid"
+msgstr ""
+
+#: src/Service/Validation/UserValidation.php:68
+msgid "Email is already registered."
+msgstr ""
+
+#: src/Service/Validation/UserValidation.php:88
+msgid ""
+"Password must contain at least one uppercase letter, one lowercase letter, "
+"one number and one special character (@$!%*?&+)"
+msgstr ""
+
+#: src/Service/Validation/UserValidation.php:118
+msgid "You must accept the terms and conditions to sign up"
+msgstr ""
+
+#: src/Service/Validation/UserValidation.php:151
+msgid "You cannot edit this user!"
+msgstr ""
+
+#: src/Service/Validation/UserValidation.php:215
+msgid "Username already taken"
+msgstr ""
+
+#: src/Service/Validation/UserValidation.php:222
+msgid "Username cannot contain a reserved word ({word})"
+msgstr ""
+
+#: src/Service/Validation/UserValidation.php:245
+msgid "Email is already registered for another user."
+msgstr ""
+
+#: src/Util/ArgExtract.php:27
+msgid "This event was not found in our database"
+msgstr ""
+
+#: templates/Email/Login/login.html.twig:4
+#: templates/Email/Login/login.txt.twig:4
+msgid "You just signed in on the {appName} sponsoring website"
+msgstr ""
+
+#: templates/Email/Login/login.html.twig:16
+#: templates/Email/Login/login.txt.twig:10
+#: templates/Email/Newsletter/newsletter-signup.html.twig:5
+msgid "If you did this, you can ignore this mail."
+msgstr ""
+
+#: templates/Email/Login/login.html.twig:17
+#: templates/Email/Login/login.txt.twig:11
+#: templates/Email/Newsletter/newsletter-signup.html.twig:6
+#: templates/Email/Newsletter/newsletter-signup.txt.twig:6
+msgid ""
+"However, if you did not sign in recently, please do not hesitate to contact "
+"us on {contact}."
+msgstr ""
+
+#: templates/Email/Newsletter/newsletter-signup.html.twig:4
+#: templates/Email/Newsletter/newsletter-signup.txt.twig:4
+msgid ""
+"You just signed up for the {appName} sponsoring website newsletter. From now "
+"on, you will receive interesting updates and information regarding the "
+"progress of the {appName} and also its sponsorship status."
+msgstr ""
+
+#: templates/Email/PasswordReset/reset-password.html.twig:4
+msgid ""
+"You just requested a password reset for the {appName} sponsoring website. "
+"You can now reset your password by clicking on the button below"
+msgstr ""
+
+#: templates/Email/PasswordReset/reset-password.html.twig:5
+msgid "Reset your password"
+msgstr ""
+
+#: templates/Email/PasswordReset/reset-password.html.twig:6
+msgid ""
+"If the button does not work, please copy and paste this link into your "
+"browser: {link}"
+msgstr ""
+
+#: templates/Email/PasswordReset/reset-password.html.twig:7
+#: templates/Email/PasswordReset/reset-password.txt.twig:6
+msgid ""
+"However, if you did not request a password reset recently, please do not "
+"hesitate to contact us on {contact}."
+msgstr ""
+
+#: templates/Email/PasswordReset/reset-password.txt.twig:4
+msgid ""
+"You just requested a password reset for the {appName} sponsoring website. "
+"You can now reset your password by copy and pasting the link below into your "
+"browser"
+msgstr ""
+
+#: templates/Email/Registration/registration.html.twig:8
+msgid "You just signed up on the {appName} website"
+msgstr ""
+
+#: templates/Email/Registration/registration.html.twig:16
+#: templates/Email/Registration/registration.txt.twig:6
+msgid ""
+"Your username is {username}. Please store your password in a safe location."
+msgstr ""
+
+#: templates/Email/Registration/registration.html.twig:24
+#: templates/Email/Registration/registration.txt.twig:8
+msgid ""
+"If you cannot remember signing up or have any other concerns, please do not "
+"hesitate to contact us on {contact}."
+msgstr ""
+
+#: templates/Email/Registration/registration.txt.twig:4
+msgid "You just signed up on the {appName} website."
+msgstr ""
+
+#: templates/Email/layout.email.html.twig:18
+#: templates/Email/layout.email.txt.twig:2
+msgid "Dear {name}"
+msgstr ""
+
+#: templates/Email/layout.email.html.twig:22
+#: templates/Email/layout.email.txt.twig:6
+msgid "Best regards"
+msgstr ""
+
+#: templates/Email/layout.email.txt.twig:11
+msgid "Need more help?"
+msgstr ""
+
+#: templates/Email/layout.email.txt.twig:12
+msgid "contact me on {contact}"
+msgstr ""
+
+#: templates/Email/layout.email.txt.twig:16
+msgid "Instagram"
+msgstr ""
+
+#: templates/Email/layout.email.txt.twig:17
+msgid "Facebook"
+msgstr ""
+
+#: templates/Email/layout.email.txt.twig:18
+msgid "YouTube"
+msgstr ""
+
+#: templates/Email/layout.email.txt.twig:19
+msgid "Website"
+msgstr ""

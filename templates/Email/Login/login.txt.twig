@@ -1,0 +1,12 @@
+{% extends 'Email/layout.email.txt.twig' %}
+
+{% block content %}
+{{__('You just signed in on the {appName} sponsoring website',{appName:application_name})}}
+
+{{ip}}
+{{location}}
+{{time}}
+
+{{__('If you did this, you can ignore this mail.')}}
+{{__('However, if you did not sign in recently, please do not hesitate to contact us on {contact}.',{'contact':contact})}}
+{% endblock %}

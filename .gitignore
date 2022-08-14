@@ -1,0 +1,81 @@
+nbproject/
+.DS_STORE
+cache.properties
+VERSION_NOTES.md
+.idea/
+config/jwt/*.pem
+
+*.mwb.bak
+
+/dist*
+deployment.json
+
+# Test configuration
+/tests/api.suite.yml
+/tests/unit.suite.yml
+
+# data directory
+!/data/config/*
+/data/config/*
+!/data/config/.gitkeep
+
+# input directory
+!/data/input/*
+/data/input/*
+!/data/input/.gitkeep
+
+# logs directory
+!/data/logs/*
+/data/logs/*
+!/data/logs/.gitkeep
+
+# geoip directory
+!/data/geoip/*
+/data/geoip/*
+!/data/geoip/.gitkeep
+
+# enqueue directory
+!/data/enqueue/*
+/data/enqueue/*
+!/data/enqueue/.gitkeep
+!/data/enqueue/logs/.gitkeep
+
+secrets.json
+
+composer.phar
+
+config/env.php
+config/environment.php
+config/features.php
+
+#Project dependencies
+vendor/
+node_modules/
+
+#Complete build folder
+build/
+
+#Complete tmp/ folder except
+#.htaccess file,
+!tmp/
+tmp/*
+!tmp/.htaccess
+#cache/ folder with empty file
+!tmp/cache/
+tmp/cache/*
+!tmp/cache/empty
+
+#logs/ folder with empty file
+!tmp/logs/
+tmp/logs/*
+!tmp/logs/empty
+
+#Asset cache
+!public/assets/
+public/assets/*
+!public/assets/.htaccess
+
+#Asset cache
+!public/tmp/
+public/tmp/*
+!public/tmp/.htaccess

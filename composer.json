@@ -1,0 +1,88 @@
+{
+    "name": "company/your-app",
+    "description": "A description of your app",
+    "license": "PROPRITARY",
+    "require": {
+        "cakephp/database": "^4",
+        "enqueue/dbal": "^0.10.15",
+        "enqueue/simple-client": "^0.10.9",
+        "ext-bcmath": "*",
+        "ext-fileinfo": "*",
+        "ext-imagick": "*",
+        "ext-json": "*",
+        "ext-openssl": "*",
+        "ext-pcntl": "*",
+        "ext-pdo": "*",
+        "ext-readline": "*",
+        "ext-zip": "*",
+        "fightbulc/moment": "^1.33",
+        "geoip2/geoip2": "^2.11",
+        "gnugat/nomo-spaco": "~0.4",
+        "guzzlehttp/guzzle": "^7.0",
+        "hashids/hashids": "^4.1",
+        "haydenpierce/class-finder": "^0.4.3",
+        "intervention/image": "^2.6",
+        "lavary/crunz": "^3.2",
+        "league/flysystem": "^1.0",
+        "mailgun/mailgun-php": "^3.5",
+        "monolog/monolog": "^1.23",
+        "php-di/php-di": "^6.0",
+        "php-http/curl-client": "^2.2",
+        "phpmailer/phpmailer": "^6.0",
+        "ramsey/uuid": "^3.8",
+        "robmorgan/phinx": "^0.12",
+        "slim/psr7": "^1.4",
+        "slim/slim": "^4.0.0",
+        "slim/twig-view": "^3.2",
+        "symfony/translation": "^5.3",
+        "symfony/twig-bridge": "^5.3",
+        "twig/string-extra": "^3.3",
+        "firebase/php-jwt": "^6.3"
+    },
+    "require-dev": {
+        "ext-simplexml": "*",
+        "odan/phinx-migrations-generator": "^5.4",
+        "phpunit/phpunit": "^9.5",
+        "phpstan/phpstan": "^0.12",
+        "friendsofphp/php-cs-fixer": "^2.15",
+        "czproject/git-php": "^4.0",
+        "codeception/codeception": "^5.0",
+        "codeception/module-phpbrowser": "^3.0",
+        "codeception/module-asserts": "^3.0",
+        "codeception/module-rest": "^3.0",
+        "codeception/module-db": "^3.0"
+    },
+    "autoload": {
+        "files": [
+            "lib/services.php",
+            "lib/util.php"
+        ],
+        "psr-4": {
+            "App\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Test\\Acceptance\\": "tests/acceptance",
+            "Test\\Api\\": "tests/api",
+            "Test\\Functional\\": "tests/functional",
+            "Test\\Unit\\": "tests/unit"
+        }
+    },
+    "scripts": {
+        "travis": [
+            "@php:stan",
+            "@style:fix",
+            "@test"
+        ],
+        "migrate": "cd config && ../vendor/bin/phinx migrate",
+        "ms:migrate": "cd config && call ../vendor/bin/phinx migrate",
+        "seed": "cd config && ../vendor/bin/phinx seed:run -s DatabaseSeeder",
+        "php:stan": "vendor/bin/phpstan analyse --no-progress -c phpstan.neon",
+        "style:fix": "vendor/bin/php-cs-fixer fix --config=.cs.php --dry-run",
+        "style:fix:really": "vendor/bin/php-cs-fixer fix --config=.cs.php",
+        "deploy": "@php bin/deploy.php -b master",
+        "generate:secret": "mkdir -p config/jwt && openssl genrsa -out config/jwt/private.pem -aes256 8192",
+        "generate:secret:test": "mkdir -p config/jwt && openssl genrsa -out config/jwt/private.pem -aes256 -passout pass:testing 8192"
+    }
+}

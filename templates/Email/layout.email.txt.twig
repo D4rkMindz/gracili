@@ -1,0 +1,19 @@
+{{ title }}
+{{__('Dear {name}', {'name': name})}}
+
+{% block content %}{% endblock %}
+
+{{__('Best regards')}}
+{{ application_name }}
+
+____________________________________________________________
+
+{{ __('Need more help?') }}
+{{ __('contact me on {contact}', {'contact': contact}) }}
+
+____________________________________________________________
+© {{ application_name }}
+{{ __('Instagram') }}: {{ social.instagram }}
+{{ __('Facebook') }}: {{ social.facebook }}
+{{ __('YouTube') }}: {{ social.youtube }}
+{{ __('Website') }}: {{ social.website }}

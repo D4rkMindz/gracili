@@ -1,0 +1,11 @@
+parameters:
+    level: 3
+    paths:
+        - src
+        - bin
+        - lib
+        - config
+    excludes_analyse:
+        - *.html.php
+        - *_support*
+        - *_generated*

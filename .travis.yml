@@ -1,0 +1,41 @@
+language: php
+
+php:
+  - "7.2"
+  - "7.3"
+  - "7.4"
+  - nightly
+
+# This triggers builds to run on the new TravisCI infrastructure.
+# See: http://docs.travis-ci.com/user/workers/container-based-infrastructure/
+sudo: false
+
+services:
+  - mysql
+
+notifications:
+  email: false
+
+## Cache composer
+cache:
+  directories:
+    - $HOME/.composer/cache
+
+before_script:
+  - mysql -e 'create database box-admin_test;'
+  - cp config/env.example.php config/env.php
+  - travis_retry npm install
+  - travis_retry composer self-update
+  - travis_retry composer update ${COMPOSER_FLAGS} --no-interaction --prefer-dist
+  - composer generate:secret:test
+  - APP_CONFIG=integration composer migrate
+  # Same as in integration.php
+  - cd $TRAVIS_BUILD_DIR
+
+
+script:
+  - composer travis
+
+after_success:
+  - if [ "$TRAVIS_PHP_VERSION" == "7.3" ]; then wget https://scrutinizer-ci.com/ocular.phar; fi
+  - if [ "$TRAVIS_PHP_VERSION" == "7.3" ]; then php ocular.phar code-coverage:upload --format=php-clover build/logs/clover.xml; fi

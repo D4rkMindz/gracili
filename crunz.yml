@@ -1,0 +1,53 @@
+# Crunz Configuration Settings
+
+# This option defines where the task files and
+# directories reside.
+# The path is relative to this config file.
+# Trailing slashes will be ignored.
+source: resources/tasks
+
+# The suffix is meant to target the task files inside the ":source" directory.
+# Please note if you change this value, you need
+# to make sure all the existing tasks files are renamed accordingly.
+suffix: Task.php
+
+# Timezone is used to calculate task run time
+# This option is very important and not setting it is deprecated
+# and will result in exception in 2.0 version.
+timezone: UTC
+
+# This option define which timezone should be used for log files
+# If false, system default timezone will be used
+# If true, the timezone in config file that is used to calculate task run time will be used
+timezone_log: false
+
+logger_factory: 'App\Util\CrunzLoggerFactory'
+
+# By default, line breaks in logs aren't allowed.
+# Set the value to true to allow them.
+log_allow_line_breaks: true
+
+# By default, empty context arrays are shown in the log.
+# Set the value to true to remove them.
+log_ignore_empty_context: false
+
+# This option determines whether the output should be emailed or not.
+email_output: false
+# Disabled since it is sent using plain php mailer
+## This option determines whether the error messages should be emailed or not.
+#email_errors: true
+#
+## Global Swift Mailer settings
+#mailer:
+#  # Possible values: smtp, mail, and sendmail
+#  transport: "smtp"
+#  recipients: [ "bjoern@pfoster.ch" ]
+#  sender_name: "your-app LOG"
+#  sender_email: "noreply@your-domain.org"
+#
+## very unhappy to post this into GitHub, but config does not allow it to be done on one way
+#smtp:
+#  host: "smtp.mailgun.org"
+#  port: 465
+#  username: "postmaster@sandbox6207cba62626429e845856f700c1345a.mailgun.org"
+#  password: "84f4630bbd68800fbf3394d32d58f846"

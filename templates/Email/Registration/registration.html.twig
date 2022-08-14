@@ -1,0 +1,28 @@
+{% extends 'Email/layout.email.html.twig' %}
+
+{% block content %}
+    <tr style="border-collapse:collapse">
+        <td class="es-m-txt-l" bgcolor="#ffffff" align="left"
+            style="Margin:0;padding-top:20px;padding-bottom:20px;padding-left:30px;padding-right:30px">
+            <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:lato, 'helvetica neue', helvetica, arial, sans-serif;line-height:27px;color:#666666;font-size:18px">
+                {{ __('You just signed up on the {appName} website',{appName:application_name}) }}
+            </p>
+        </td>
+    </tr>
+    <tr style="border-collapse:collapse">
+        <td class="es-m-txt-l" align="left"
+            style="padding:0;Margin:0;padding-top:20px;padding-left:30px;padding-right:30px">
+            <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:lato, 'helvetica neue', helvetica, arial, sans-serif;line-height:27px;color:#666666;font-size:18px">
+                {{ __('Your username is {username}. Please store your password in a safe location.',{'username':username}) }}
+            </p>
+        </td>
+    </tr>
+    <tr style="border-collapse:collapse">
+        <td class="es-m-txt-l" align="left"
+            style="padding:0;Margin:0;padding-top:20px;padding-left:30px;padding-right:30px">
+            <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:lato, 'helvetica neue', helvetica, arial, sans-serif;line-height:27px;color:#666666;font-size:18px">
+                {{ __('If you cannot remember signing up or have any other concerns, please do not hesitate to contact us on {contact}.',{'contact':contact}) }}
+            </p>
+        </td>
+    </tr>
+{% endblock %}

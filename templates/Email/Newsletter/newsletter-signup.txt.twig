@@ -1,0 +1,7 @@
+{% extends 'Email/layout.email.txt.twig' %}
+
+{% block content %}
+{{__('You just signed up for the {appName} sponsoring website newsletter. From now on, you will receive interesting updates and information regarding the progress of the {appName} and also its sponsorship status.', {appName: application_name})}}
+
+{{__('However, if you did not sign in recently, please do not hesitate to contact us on {contact}.',{'contact':contact})}}
+{% endblock %}

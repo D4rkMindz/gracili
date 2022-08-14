@@ -1,0 +1,5 @@
+- Replaced datatrans by stripe
+- Added profile editing
+- Allow the user to edit messages of purchase
+- Improved emails
+- Added versioning

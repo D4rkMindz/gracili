@@ -1,0 +1,10 @@
+{% extends 'Email/layout.email.txt.twig' %}
+
+{% block content %}
+{{ __('You just signed up on the {appName} website.', {appName: application_name}) }}
+
+{{ __('Your username is {username}. Please store your password in a safe location.', {'username': username}) }}
+
+{{ __('If you cannot remember signing up or have any other concerns, please do not hesitate to contact us on {contact}.', {'contact': contact}) }}
+
+{% endblock %}
