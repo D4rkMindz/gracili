@@ -1,7 +1,7 @@
 <?php
 
-
 use App\Type\Auth\Group;
+use App\Type\Auth\Role;
 use App\Type\Language;
 use Phinx\Seed\AbstractSeed;
 
@@ -98,5 +98,18 @@ class UserSeed extends AbstractSeed
         ];
 
         $this->table('user_has_group')->insert($userHasGroup)->save();
+
+        $userHasRole = [
+            [
+                'user_id' =>  self::USER['admin'],
+                'role_id' => ACLSeed::ROLE_ID[Role::ADMIN],
+                'created_at' => '2022-08-01 00:00:00',
+                'created_by' => 0,
+                'modified_at' => '2022-08-01 00:00:00',
+                'modified_by' => 0,
+            ],
+        ];
+
+        $this->table('user_has_role')->insert($userHasRole)->save();
     }
 }

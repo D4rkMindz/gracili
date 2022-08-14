@@ -1,5 +1,7 @@
 <?php
 
+use Psr\Container\ContainerInterface;
+
 
 /**
  * Inherited Methods
@@ -21,6 +23,19 @@ class UnitTester extends \Codeception\Actor
     use _generated\UnitTesterActions;
 
     /**
-     * Define custom actions here
+     * Get the container
+     *
+     * @return ContainerInterface
      */
+    public function getContainer(): ContainerInterface
+    {
+        static $container = null;
+        if ($container === null) {
+            $app = require __DIR__ . '/../../config/bootstrap.php';
+
+            $container = $app->getContainer();
+        }
+
+        return $container;
+    }
 }

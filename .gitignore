@@ -4,6 +4,7 @@ cache.properties
 VERSION_NOTES.md
 .idea/
 config/jwt/*.pem
+.APP_CONFIG
 
 *.mwb.bak
 

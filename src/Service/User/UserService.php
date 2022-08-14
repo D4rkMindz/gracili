@@ -44,11 +44,6 @@ class UserService
         return $userId;
     }
 
-    public function getUserData(int $userId, string $key)
-    {
-
-    }
-
     /**
      * Create a user
      *
@@ -156,18 +151,5 @@ class UserService
             $lastName,
             $street
         );
-    }
-
-    /**
-     * Get a user
-     *
-     * @param int $userId
-     *
-     * @return mixed
-     * @throws RecordNotFoundException
-     */
-    public function getUser(int $userId)
-    {
-        return $this->userRepository->getUserById($userId);
     }
 }

@@ -83,6 +83,8 @@
         "style:fix:really": "vendor/bin/php-cs-fixer fix --config=.cs.php",
         "deploy": "@php bin/deploy.php -b master",
         "generate:secret": "mkdir -p config/jwt && openssl genrsa -out config/jwt/private.pem -aes256 8192",
-        "generate:secret:test": "mkdir -p config/jwt && openssl genrsa -out config/jwt/private.pem -aes256 -passout pass:testing 8192"
+        "generate:secret:test": "mkdir -p config/jwt && openssl genrsa -out config/jwt/private.pem -aes256 -passout pass:testing 8192",
+        "test": "codecept run",
+        "test:coverage": "XDEBUG_MODE=coverage php vendor/bin/codecept run unit --coverage --coverage-xml --coverage-html"
     }
 }

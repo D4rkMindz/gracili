@@ -13,6 +13,13 @@ extensions:
 settings:
     shuffle: false
     lint: true
-
+coverage:
+    enabled: true
+    include:
+        - src/*
+        - lib/*
+        - resources/tasks/*
+    exclude:
+        - tmp/*
 params:
     - tests/params.php

@@ -5,7 +5,7 @@ use DI\ContainerBuilder;
 use Slim\App;
 use Symfony\Component\Translation\Translator;
 
-if (file_exists(__DIR__ . '/environment.php')) {
+if (file_exists(__DIR__ . '/environment.php') && !defined('APP_ENV')) {
     require_once __DIR__ . '/environment.php';
 }
 if (file_exists(__DIR__ . '/../../environment.php')) {

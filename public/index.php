@@ -4,6 +4,20 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 try {
     $app = require __DIR__ . "/../config/bootstrap.php";
+
+    // for testing coverage
+    $appConfigFile = __DIR__ . '/../.APP_CONFIG';
+    $c3File = __DIR__ . '/../c3.php';
+    if (
+        file_exists($appConfigFile)
+        && strtolower(file_get_contents($appConfigFile)) === 'integration'
+        && file_exists($c3File)
+    ) {
+        putenv('XDEBUG_MODE=coverage');
+        require_once $c3File;
+        ob_clean();
+    }
+
     $app->run();
 } catch (Throwable $t) {
     $data = [
