@@ -68,10 +68,11 @@ abstract class AppTable implements TableInterface
      */
     public function insert(array $row, int $executorId = 0, array $types = []): StatementInterface
     {
+        $now = new Moment();
         $row = array_merge($row, [
-            'created_at' => date('Y-m-d H:i:s'),
+            'created_at' => $now->format('Y-m-d H:i:s'),
             'created_by' => $executorId,
-            'modified_at' => date('Y-m-d H:i:s'),
+            'modified_at' => $now->format('Y-m-d H:i:s'),
             'modified_by' => $executorId,
         ]);
 
@@ -105,8 +106,9 @@ abstract class AppTable implements TableInterface
      */
     public function archive(int $id, int $executorId)
     {
+        $now = new Moment();
         $row = [
-            'archived_at' => date('Y-m-d H:i:s'),
+            'archived_at' => $now->format('Y-m-d H:i:s'),
             'archived_by' => $executorId,
         ];
 
@@ -129,8 +131,9 @@ abstract class AppTable implements TableInterface
      */
     public function update(array $row, array $where = ['id' => 1], int $executorId = 0): bool
     {
+        $now = new Moment();
         $row = array_merge($row, [
-            'modified_at' => date('Y-m-d H:i:s'),
+            'modified_at' => $now->format('Y-m-d H:i:s'),
             'modified_by' => $executorId,
         ]);
         $query = $this->connection->newQuery();

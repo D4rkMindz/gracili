@@ -4,6 +4,7 @@ namespace App\Service\Auth\JWT;
 
 use App\Exception\AuthenticationException;
 use App\Repository\GroupRepository;
+use App\Repository\JWTRepository;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
 use App\Service\ID\HashID;
@@ -25,6 +26,7 @@ class JWTService
     private UserRepository $userRepository;
     private RoleRepository $roleRepository;
     private GroupRepository $groupRepository;
+    private JWTRepository $jwtRepository;
 
     /**
      * Constructor
@@ -33,11 +35,13 @@ class JWTService
         UserRepository $userRepository,
         RoleRepository $roleRepository,
         GroupRepository $groupRepository,
+        JWTRepository $jwtRepository,
         SettingsInterface $settings
     ) {
         $this->userRepository = $userRepository;
         $this->roleRepository = $roleRepository;
         $this->groupRepository = $groupRepository;
+        $this->jwtRepository = $jwtRepository;
         $this->config = $settings->get(JWT::class);
     }
 
@@ -89,9 +93,28 @@ class JWTService
             $this->config['secret_file']['path'],
             $this->config['secret_file']['password']
         );
-        $token = JWT::encode($tokenData, $secretKey, $this->config['algorithm'][0]);
 
-        return $token;
+        return JWT::encode($tokenData, $secretKey, $this->config['algorithm'][0]);
+    }
+
+    /**
+     * Create a refresh token based on the WJT
+     *
+     * @param string $jwt
+     *
+     * @return string
+     */
+    public function createRefreshToken(string $jwt): string
+    {
+        $decoded = explode('.', $jwt);
+        $data = json_decode(base64_decode($decoded[1]), true);
+        $userId = HashID::decodeSingle($data['data'][JWTData::USER_HASH]);
+        $issuedAt = new Moment('@' . $data['iat']);
+        $expiredAt = new Moment('@' . $data['exp']);
+        $refreshToken = HashID::encode([$userId, $data['iat'], $data['exp'], time()]);
+        $this->jwtRepository->saveJWTToken($userId, $jwt, $refreshToken, $issuedAt, $expiredAt, $userId);
+
+        return $refreshToken;
     }
 
     /**
@@ -114,7 +137,7 @@ class JWTService
             );
 
             return (array)$decoded;
-        } catch (ExpiredException $exp){
+        } catch (ExpiredException $exp) {
             throw new AuthenticationException(HttpCode::UNAUTHORIZED, __('Token expired'), 0, $exp);
         } catch (Exception $e) {
             throw new AuthenticationException(HttpCode::UNAUTHORIZED, __('Not authorized'), 0, $e);
@@ -132,6 +155,7 @@ class JWTService
     {
         try {
             $decoded = $this->decodeJWT($token);
+
             return $decoded['exp'] > time();
         } catch (Exception $e) {
             return false;

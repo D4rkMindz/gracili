@@ -36,8 +36,7 @@ class UserValidation extends AppValidation
         string $email,
         string $password,
         string $firstName,
-        string $lastName,
-        bool $acceptTC
+        string $lastName
     ) {
         $validationResult = new ValidationResult(__('Please check your data'));
 
@@ -45,7 +44,6 @@ class UserValidation extends AppValidation
         $this->validatePassword($password, $validationResult);
         $this->validateName($firstName, 'first_name', $validationResult);
         $this->validateName($lastName, 'last_name', $validationResult);
-        $this->validateAcceptedTC($acceptTC, $validationResult);
 
         $this->throwOnError($validationResult);
     }
@@ -104,19 +102,6 @@ class UserValidation extends AppValidation
     ): void {
         $this->validateLengthMin($name, $field, $validationResult, 3);
         $this->validateLengthMax($name, $field, $validationResult, 50);
-    }
-
-    /**
-     * Validate that the user accepted the terms and conditions
-     *
-     * @param bool             $acceptedTC
-     * @param ValidationResult $validationResult
-     */
-    private function validateAcceptedTC(bool $acceptedTC, ValidationResult $validationResult)
-    {
-        if (!$acceptedTC) {
-            $validationResult->setError('accept_tc', __('You must accept the terms and conditions to sign up'));
-        }
     }
 
     /**

@@ -1,6 +1,8 @@
 <?php
 
 use App\Controller\Auth\LoginAction;
+use App\Controller\Auth\LoginGoogleAction;
+use App\Controller\Auth\LoginGoogleCallbackAction;
 use App\Controller\IndexAction;
 use App\Controller\Monitor\MonitorQueueAction;
 use App\Middleware\AuthMiddleware;
@@ -18,7 +20,9 @@ return static function (App $app) {
 
         $group->group('/v1', function (RouteCollectorProxy $v1) {
             $v1->group('/auth', function (RouteCollectorProxy $auth) {
-                $auth->post('/login', LoginAction::class)->setName(LoginAction::ROUTE);
+                $auth->post('/login', LoginAction::class)->setName(LoginAction::NAME);
+                $auth->post('/google', LoginGoogleAction::class)->setName(LoginGoogleAction::NAME);
+                $auth->post('/google/verify', LoginGoogleCallbackAction::class)->setName(LoginGoogleCallbackAction::NAME);
             });
 
             $v1->group('/monitoring', function (RouteCollectorProxy $monitoring) {

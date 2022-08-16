@@ -17,8 +17,15 @@ deployment.json
 
 # data directory
 !/data/config/*
-/data/config/*
 !/data/config/.gitkeep
+# configuration for private jwt key
+!/data/config/jwt/*
+/data/config/jwt/*
+!/data/config/jwt/.gitkeep
+# configuration for oauth secrets
+!/data/config/oauth/*
+/data/config/oauth/*
+!/data/config/oauth/.gitkeep
 
 # input directory
 !/data/input/*

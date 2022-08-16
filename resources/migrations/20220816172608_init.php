@@ -133,12 +133,97 @@ class Init extends Phinx\Migration\AbstractMigration
                 'comment' => 'The record archiver user id',
                 'after' => 'archived_at',
             ])
+            ->addIndex(['group_id'], [
+                'name' => 'fk_group_has_role_group1_idx',
+                'unique' => false,
+            ])
             ->addIndex(['role_id'], [
                 'name' => 'fk_group_has_role_role1_idx',
                 'unique' => false,
             ])
-            ->addIndex(['group_id'], [
-                'name' => 'fk_group_has_role_group1_idx',
+            ->create();
+        $this->table('jwt', [
+                'id' => false,
+                'primary_key' => ['id'],
+                'engine' => 'InnoDB',
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci',
+                'comment' => '',
+                'row_format' => 'DYNAMIC',
+            ])
+            ->addColumn('id', 'integer', [
+                'null' => false,
+                'limit' => MysqlAdapter::INT_REGULAR,
+                'identity' => 'enable',
+            ])
+            ->addColumn('user_id', 'integer', [
+                'null' => false,
+                'limit' => MysqlAdapter::INT_REGULAR,
+                'after' => 'id',
+            ])
+            ->addColumn('jwt', 'text', [
+                'null' => false,
+                'limit' => MysqlAdapter::TEXT_LONG,
+                'collation' => 'utf8mb4_unicode_ci',
+                'encoding' => 'utf8mb4',
+                'comment' => 'The JWT sent to the user',
+                'after' => 'user_id',
+            ])
+            ->addColumn('refresh_token', 'string', [
+                'null' => false,
+                'limit' => 80,
+                'collation' => 'utf8mb4_unicode_ci',
+                'encoding' => 'utf8mb4',
+                'comment' => 'The refresh token for the JWT to collect a new token',
+                'after' => 'jwt',
+            ])
+            ->addColumn('issued_at', 'datetime', [
+                'null' => false,
+                'comment' => 'When the refresh token was issued',
+                'after' => 'refresh_token',
+            ])
+            ->addColumn('expires_at', 'datetime', [
+                'null' => false,
+                'comment' => 'The expiration date time of the refresh token',
+                'after' => 'issued_at',
+            ])
+            ->addColumn('created_at', 'datetime', [
+                'null' => true,
+                'default' => 'CURRENT_TIMESTAMP',
+                'comment' => 'The record creation date time',
+                'after' => 'expires_at',
+            ])
+            ->addColumn('created_by', 'integer', [
+                'null' => true,
+                'limit' => MysqlAdapter::INT_REGULAR,
+                'comment' => 'The record creator user id',
+                'after' => 'created_at',
+            ])
+            ->addColumn('modified_at', 'datetime', [
+                'null' => true,
+                'default' => 'CURRENT_TIMESTAMP',
+                'comment' => 'The record last modification date time',
+                'after' => 'created_by',
+            ])
+            ->addColumn('modified_by', 'integer', [
+                'null' => true,
+                'limit' => MysqlAdapter::INT_REGULAR,
+                'comment' => 'The record last modifier user id',
+                'after' => 'modified_at',
+            ])
+            ->addColumn('archived_at', 'datetime', [
+                'null' => true,
+                'comment' => 'The record archive date time',
+                'after' => 'modified_by',
+            ])
+            ->addColumn('archived_by', 'integer', [
+                'null' => true,
+                'limit' => MysqlAdapter::INT_REGULAR,
+                'comment' => 'The record archiver user id',
+                'after' => 'archived_at',
+            ])
+            ->addIndex(['user_id'], [
+                'name' => 'fk_jwt_token_user1_idx',
                 'unique' => false,
             ])
             ->create();
@@ -214,6 +299,83 @@ class Init extends Phinx\Migration\AbstractMigration
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'comment' => 'The record archiver user id',
                 'after' => 'archived_at',
+            ])
+            ->create();
+        $this->table('oauth_token', [
+                'id' => false,
+                'primary_key' => ['id'],
+                'engine' => 'InnoDB',
+                'encoding' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci',
+                'comment' => '',
+                'row_format' => 'DYNAMIC',
+            ])
+            ->addColumn('id', 'integer', [
+                'null' => false,
+                'limit' => MysqlAdapter::INT_REGULAR,
+                'identity' => 'enable',
+            ])
+            ->addColumn('user_id', 'integer', [
+                'null' => false,
+                'limit' => MysqlAdapter::INT_REGULAR,
+                'after' => 'id',
+            ])
+            ->addColumn('token', 'text', [
+                'null' => false,
+                'limit' => MysqlAdapter::TEXT_LONG,
+                'collation' => 'utf8mb4_unicode_ci',
+                'encoding' => 'utf8mb4',
+                'after' => 'user_id',
+            ])
+            ->addColumn('refresh_token', 'string', [
+                'null' => false,
+                'limit' => 500,
+                'collation' => 'utf8mb4_unicode_ci',
+                'encoding' => 'utf8mb4',
+                'after' => 'token',
+            ])
+            ->addColumn('expires_at', 'datetime', [
+                'null' => false,
+                'after' => 'refresh_token',
+            ])
+            ->addColumn('created_at', 'datetime', [
+                'null' => true,
+                'default' => 'CURRENT_TIMESTAMP',
+                'comment' => 'The record creation date time',
+                'after' => 'expires_at',
+            ])
+            ->addColumn('created_by', 'integer', [
+                'null' => true,
+                'limit' => MysqlAdapter::INT_REGULAR,
+                'comment' => 'The record creator user id',
+                'after' => 'created_at',
+            ])
+            ->addColumn('modified_at', 'datetime', [
+                'null' => true,
+                'default' => 'CURRENT_TIMESTAMP',
+                'comment' => 'The record last modification date time',
+                'after' => 'created_by',
+            ])
+            ->addColumn('modified_by', 'integer', [
+                'null' => true,
+                'limit' => MysqlAdapter::INT_REGULAR,
+                'comment' => 'The record last modifier user id',
+                'after' => 'modified_at',
+            ])
+            ->addColumn('archived_at', 'datetime', [
+                'null' => true,
+                'comment' => 'The record archive date time',
+                'after' => 'modified_by',
+            ])
+            ->addColumn('archived_by', 'integer', [
+                'null' => true,
+                'limit' => MysqlAdapter::INT_REGULAR,
+                'comment' => 'The record archiver user id',
+                'after' => 'archived_at',
+            ])
+            ->addIndex(['user_id'], [
+                'name' => 'fk_oauth_token_user1_idx',
+                'unique' => false,
             ])
             ->create();
         $this->table('password_reset_request', [
@@ -400,12 +562,10 @@ class Init extends Phinx\Migration\AbstractMigration
                 'comment' => 'The email of the user (e.g. admin@your-domain.com)',
                 'after' => 'username',
             ])
-            ->addColumn('password', 'string', [
+            ->addColumn('email_verified', 'integer', [
                 'null' => false,
-                'limit' => 255,
-                'collation' => 'utf8mb4_unicode_ci',
-                'encoding' => 'utf8mb4',
-                'comment' => 'The HASHED password of the user',
+                'default' => '0',
+                'limit' => MysqlAdapter::INT_TINY,
                 'after' => 'email',
             ])
             ->addColumn('first_name', 'string', [
@@ -414,7 +574,27 @@ class Init extends Phinx\Migration\AbstractMigration
                 'collation' => 'utf8mb4_unicode_ci',
                 'encoding' => 'utf8mb4',
                 'comment' => 'The first name of the user (e.g. „Björn“)',
-                'after' => 'password',
+                'after' => 'email_verified',
+            ])
+            ->addColumn('registration_method', 'string', [
+                'null' => false,
+                'default' => 'default',
+                'limit' => 10,
+                'collation' => 'utf8mb4_unicode_ci',
+                'encoding' => 'utf8mb4',
+                'comment' => 'The sign up method.
+Possible options:
+- „google“ for google oauth login
+- „default“ for username/password',
+                'after' => 'first_name',
+            ])
+            ->addColumn('password', 'string', [
+                'null' => true,
+                'limit' => 255,
+                'collation' => 'utf8mb4_unicode_ci',
+                'encoding' => 'utf8mb4',
+                'comment' => 'The HASHED password of the user',
+                'after' => 'registration_method',
             ])
             ->addColumn('last_name', 'string', [
                 'null' => true,
@@ -422,7 +602,7 @@ class Init extends Phinx\Migration\AbstractMigration
                 'collation' => 'utf8mb4_unicode_ci',
                 'encoding' => 'utf8mb4',
                 'comment' => 'The last name of the user (e.g. „Pfoster“)',
-                'after' => 'first_name',
+                'after' => 'password',
             ])
             ->addColumn('last_login_at', 'datetime', [
                 'null' => true,

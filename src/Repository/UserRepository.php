@@ -46,6 +46,32 @@ class UserRepository extends AppRepository
     }
 
     /**
+     * Get the default login method (based on registration)
+     *
+     * The user signs up either using username/password or an OAuth2.0 provider
+     * By using an OAuth2.0 provider for regisitration, the default (username/password) login is not available
+     * Yet, the default method could still by used (in combination with oauth), if the user sets a password
+     *
+     * @param int $userId
+     *
+     * @return string
+     * @throws RecordNotFoundException
+     */
+    public function getDefaultLoginMethodForUser(int $userId): string
+    {
+        $query = $this->userTable->newSelect();
+        $query->select(['registration_method'])
+            ->where(['id' => $userId]);
+        $result = $query->execute()->fetch('assoc');
+
+        if (!empty($result)) {
+            return $result['registration_method'];
+        }
+
+        throw new RecordNotFoundException(__('User not found'), (string)$userId);
+    }
+
+    /**
      * Get the last login of a user
      *
      * @param int $userId
@@ -133,7 +159,7 @@ class UserRepository extends AppRepository
     /**
      * Get a user's id by a field
      *
-     * @param string      $field
+     * @param string $field
      * @param string $value
      *
      * @return int
@@ -176,7 +202,7 @@ class UserRepository extends AppRepository
      *
      * @return bool true if someone already registered the given email
      */
-    public function existsEmail(?string $email, ?int $excludeUserId): bool
+    public function existsEmail(?string $email, ?int $excludeUserId = null): bool
     {
         $search = ['email' => $email];
         if (!empty($excludeUserId)) {
@@ -189,28 +215,37 @@ class UserRepository extends AppRepository
     /**
      * Create the user
      *
+     * @param int    $languageId
      * @param string $username
      * @param string $email
      * @param string $firstName
      * @param string $lastName
      * @param string $password
+     * @param string $registrationMethod
+     * @param bool   $emailVerified
      * @param int    $executorId
      *
      * @return int
      */
     public function createUser(
+        int $languageId,
         string $username,
         string $email,
         string $firstName,
         string $lastName,
         string $password,
+        string $registrationMethod,
+        bool $emailVerified,
         int $executorId
     ): int {
         $user = [
+            'language_id' => $languageId,
             'username' => $username,
             'email' => $email,
+            'email_verified' => $emailVerified,
             'first_name' => $firstName,
             'last_name' => $lastName,
+            'registration_method' => $registrationMethod,
             'password' => password_hash($password, PASSWORD_DEFAULT),
         ];
 

@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Table\GroupTable;
 use App\Table\UserHasGroupTable;
+use InvalidArgumentException;
 
 class GroupRepository extends AppRepository
 {
@@ -79,5 +80,22 @@ class GroupRepository extends AppRepository
         }
 
         return [];
+    }
+
+    public function assignGroup(int $userId, string $group)
+    {
+        $query = $this->groupTable->newSelect();
+        $query->select(['id'])->where(['name' => $group]);
+        $result = $query->execute()->fetch('assoc');
+        if (empty($result)) {
+            throw new InvalidArgumentException(__('Group cannot be assigned'));
+        }
+
+        $userHasGroup = [
+            'user_id' => $userId,
+            'group_id' => $result['id'],
+        ];
+
+        $this->userHasGroupTable->insert($userHasGroup);
     }
 }

@@ -37,7 +37,8 @@
         "symfony/translation": "^5.3",
         "symfony/twig-bridge": "^5.3",
         "twig/string-extra": "^3.3",
-        "firebase/php-jwt": "^6.3"
+        "firebase/php-jwt": "^6.3",
+        "google/apiclient": "^2.12"
     },
     "require-dev": {
         "ext-simplexml": "*",
@@ -82,8 +83,8 @@
         "style:fix": "vendor/bin/php-cs-fixer fix --config=.cs.php --dry-run",
         "style:fix:really": "vendor/bin/php-cs-fixer fix --config=.cs.php",
         "deploy": "@php bin/deploy.php -b master",
-        "generate:secret": "mkdir -p config/jwt && openssl genrsa -out config/jwt/private.pem -aes256 8192",
-        "generate:secret:test": "mkdir -p config/jwt && openssl genrsa -out config/jwt/private.pem -aes256 -passout pass:testing 8192",
+        "generate:secret": "mkdir -p data/config/jwt && openssl genrsa -out data/config/jwt/private.pem -aes256 8192",
+        "generate:secret:test": "mkdir -p data/config/jwt && openssl genrsa -out data/config/jwt/private.pem -aes256 -passout pass:testing 8192",
         "test": "codecept run",
         "test:coverage": "XDEBUG_MODE=coverage php vendor/bin/codecept run unit --coverage --coverage-xml --coverage-html"
     }

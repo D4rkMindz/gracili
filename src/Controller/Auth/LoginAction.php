@@ -19,7 +19,7 @@ use Psr\Log\LoggerInterface;
  */
 class LoginAction
 {
-    public const ROUTE = 'api.v1.auth.login.submit';
+    public const NAME = 'api.v1.auth.login.submit';
 
     private AuthService $auth;
     private UserService $user;
@@ -87,9 +87,11 @@ class LoginAction
         }
 
         $jwt = $this->jwt->generateJWT($userId);
+        $refreshToken = $this->jwt->createRefreshToken($jwt);
         $responseData['message'] = __('Login successful');
         $responseData['success'] = true;
         $responseData['jwt'] = $jwt;
+        $responseData['refresh_token'] = $refreshToken;
 
         return $this->json->encode($response, $responseData);
     }

@@ -6,6 +6,7 @@ use App\Exception\AuthenticationException;
 use App\Exception\RecordNotFoundException;
 use App\Repository\PasswordResetRequestRepository;
 use App\Repository\UserRepository;
+use App\Type\Auth\AuthMethod;
 use App\Type\HttpCode;
 use Psr\Log\LoggerInterface;
 
@@ -52,6 +53,25 @@ class AuthService
         try {
             $hash = $this->userRepository->getPassword($userId);
 
+            // for oauth logins
+            if (empty($hash)) {
+                $method = $this->userRepository->getDefaultLoginMethodForUser($userId);
+                if ($method === AuthMethod::DEFAULT) {
+                    $this->logger->error('User ' . $userId . ' tried to login and has no saved password. Yet, the registration method was still default!');
+                }
+
+                $methodMap = [
+                    AuthMethod::DEFAULT => __('your username and password'),
+                    AuthMethod::GOOGLE => __('the google login'),
+                ];
+
+                $errorMessage = __('Your password is not set. Please login using {method} as usual.', [
+                    'method' => $methodMap[$method],
+                ]);
+
+                throw new AuthenticationException(HttpCode::UNAUTHORIZED, $errorMessage);
+            }
+
             return password_verify($password, $hash);
         } catch (RecordNotFoundException $exception) {
             throw new AuthenticationException(HttpCode::UNAUTHORIZED, __('Username or password invalid'));
@@ -64,7 +84,7 @@ class AuthService
      * @param int $userId
      * @param int $executorId
      *
-     * @return mixed
+     * @return array
      */
     public function findOrCreatePasswordResetRequest(int $userId, int $executorId)
     {

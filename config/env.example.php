@@ -28,6 +28,8 @@ $env[JWT::class]['secret_file']['password'] = 'testing'; // this should not be c
 $env[JWT::class]['issuer'] = 'your-domain.com';
 $env[JWT::class]['audience'] = 'your-domain.com';
 
+$env[\Google\Client::class]['secret_file'] = __DIR__ . '/../data/config/oauth/client_secret.json';
+
 $env['twig']['cache']['minify'] = false;
 $env['twig']['cache']['enabled'] = true;
 $env['twig']['debug'] = true;

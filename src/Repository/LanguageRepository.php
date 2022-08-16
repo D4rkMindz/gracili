@@ -30,7 +30,7 @@ class LanguageRepository extends AppRepository
     public function getLanguageIdByTag(string $tag): int
     {
         $query = $this->languageTable->newSelect();
-        $query->select(['id'        ])
+        $query->select(['id'])
             ->where(['tag' => $tag]);
         $result = $query->execute()->fetch('assoc');
         if (!empty($result)) {

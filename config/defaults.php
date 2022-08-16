@@ -1,6 +1,8 @@
 <?php
 
 use App\Controller\Auth\LoginAction;
+use App\Controller\Auth\LoginGoogleAction;
+use App\Controller\Auth\LoginGoogleCallbackAction;
 use App\Controller\IndexAction;
 use App\Queue\Extension\SignalHandler\AbortHandler;
 use App\Queue\ProcessorInterface;
@@ -34,15 +36,15 @@ $config = [
     'baseUrl' => 'your-app.dev',
     'social' => [
         // all links without prefixed https:// since it is defined in the template
-        'twitter' => 'twitter.com/meetlarso',
-        'facebook' => 'www.facebook.com/meetlarso',
-        'youtube' => 'www.youtube.com/channel/UCpOlvuqILbjVvXNp4jio4zQ',
-        'instagram' => 'www.instagram.com/meetlarso/',
-        'website' => 'your-dommain.com',
+        'twitter' => 'twitter.com/your-app',
+        'facebook' => 'www.facebook.com/your-app',
+        'youtube' => 'www.youtube.com/channel/your-app',
+        'instagram' => 'www.instagram.com/your-app/',
+        'website' => 'your-domain.com',
     ],
     'contact' => [
         'name' => 'Your App',
-        'email' => 'contact@your-dommain.com',
+        'email' => 'contact@your-domain.com',
     ]
 ];
 
@@ -66,7 +68,7 @@ $config['db'] = [
 ];
 
 $config[JWT::class] = [
-    'secret_file' => ['path' => '', 'password' => ''],
+    'secret_file' => ['path' => '', 'password' => ''], // usually in data/config/jwt/private.pem
     'attribute' => JWTData::REQUEST_ATTRIBUTE,
     'header' => 'Authorization',
     'regexp' => '/(.*)$/i',
@@ -83,8 +85,20 @@ $config['auth'] = [
     ],
     'relaxed' => [
         IndexAction::ROUTE => true,
-        LoginAction::ROUTE => true,
+        LoginAction::NAME => true,
+        LoginGoogleAction::NAME => true,
+        LoginGoogleCallbackAction::NAME => true,
     ],
+];
+
+$config[\Google\Client::class] = [
+    'application_name' => $applicationName,
+    'scopes' => [
+        'https://www.googleapis.com/auth/userinfo.email', // primary email address
+        'https://www.googleapis.com/auth/userinfo.profile', // public user information
+    ],
+    'secret_file' => '', // usually in data/config/oauth/client_secret.json
+    'redirect_uri' => 'https://cevi.dev/v1/auth/google/callback'
 ];
 
 $config[Translator::class] = [
@@ -131,14 +145,9 @@ $config[GeoIPService::class] = [
     'database' => $root . '/geoip/GeoLite2-City.mmdb',
 ];
 
-$config[SessionInterface::class] = [
-    'key' => '/config/private.pem', // needs to be generated
-    'timeout' => 43200, // 12 hours
-];
-
 $config[MailerAdapterInterface::class] = [
-    'from' => '"Clippy" <contact@your-dommain.com.org>',
-    'contact' => 'contact@your-dommain.com.org',
+    'from' => '"Clippy" <contact@your-domain.com.org>',
+    'contact' => 'contact@your-domain.com.org',
     'social' => [
         // all links without prefixed https:// since it is defined in the template
         'twitter' => 'twitter.com/your-app',

@@ -3,11 +3,8 @@
 namespace App\Middleware;
 
 use App\Service\Encoder\JSONEncoder;
-use App\Service\Encoder\RedirectEncoder;
 use App\Type\Language;
-use App\Type\SessionKey;
 use App\Util\ArrayReader;
-use App\Util\SessionHelper;
 use Moment\Moment;
 use Moment\MomentException;
 use Psr\Http\Message\ResponseInterface;
@@ -23,7 +20,6 @@ use Symfony\Component\Translation\Translator;
 class LanguageMiddleware implements MiddlewareInterface
 {
     private Translator $translator;
-    private array $whitelist;
     private array $momentLocaleAliases;
     private JSONEncoder $encoder;
     private Twig $twig;
@@ -39,24 +35,6 @@ class LanguageMiddleware implements MiddlewareInterface
     {
         $this->translator = $translator;
         $this->encoder = $encoder;
-        $this->whitelist = [
-            'de' => Language::DE_CH,
-            'de_CH' => Language::DE_CH,
-            'de-CH' => Language::DE_CH,
-            'de_DE' => Language::DE_CH,
-            'de-DE' => Language::DE_CH,
-            'de_AU' => Language::DE_CH,
-            'de-AU' => Language::DE_CH,
-            'fr' => Language::FR_CH,
-            'fr_CH' => Language::FR_CH,
-            'fr-CH' => Language::FR_CH,
-            'fr_FR' => Language::FR_CH,
-            'fr-FR' => Language::FR_CH,
-            'en' => Language::EN_GB,
-            'en_GB' => Language::EN_GB,
-            'en-GB' => Language::EN_GB,
-            'default' => Language::EN_GB,
-        ];
         $this->momentLocaleAliases = [
             'de_CH' => 'de_DE',
             'fr_CH' => 'fr_FR',
@@ -127,7 +105,7 @@ class LanguageMiddleware implements MiddlewareInterface
             }
         }
 
-        if (empty($language) &&  $request->hasHeader('X-Language')) {
+        if (empty($language) && $request->hasHeader('X-Language')) {
             $language = $request->getHeader('X-Language')[0];
             if (!empty($language)) {
                 $this->twig->getEnvironment()->addGlobal('language_selected', true);
@@ -140,7 +118,7 @@ class LanguageMiddleware implements MiddlewareInterface
         }
 
         if (empty($language)) {
-            $language = $this->whitelist['default'];
+            $language = Language::fromString('default');
         }
 
         return $language;
@@ -156,20 +134,17 @@ class LanguageMiddleware implements MiddlewareInterface
     protected function parseLanguage(
         string $language
     ): string {
-        if (isset($this->whitelist[$language])) {
-            return $this->whitelist[$language];
+        if (Language::fromString($language, true)) {
+            return Language::fromString($language);
         }
         $simplified = explode('-', $language)[0];
-        if (isset($this->whitelist[$simplified])) {
-            return $this->whitelist[$simplified];
+        if (Language::fromString($simplified, true)) {
+            return Language::fromString($simplified);
         }
 
         $oversimplified = explode('_', $simplified)[0];
-        if (isset($this->whitelist[$oversimplified])) {
-            return $this->whitelist[$oversimplified];
-        }
 
-        return $this->whitelist['default'];
+        return Language::fromString($oversimplified);
     }
 
     /**
@@ -179,7 +154,7 @@ class LanguageMiddleware implements MiddlewareInterface
      */
     protected function setLocale(string $language): void
     {
-        $locale = $this->whitelist[$language];
+        $locale = Language::fromString($language);
 
         $resource = __DIR__ . '/../../resources/locale/' . $locale . '_messages.mo';
         $this->translator->setLocale($locale);

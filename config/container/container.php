@@ -1,5 +1,6 @@
 <?php
 
+use App\Controller\Auth\LoginGoogleCallbackAction;
 use App\Queue\AbstractProcessor;
 use App\Queue\ProcessorInterface;
 use App\Service\Settings;
@@ -13,6 +14,7 @@ use App\Util\Twig\ValidationResultExtension;
 use Cake\Database\Connection;
 use Cake\Database\Driver\Mysql;
 use Enqueue\SimpleClient\SimpleClient;
+use Google\Client;
 use HaydenPierce\ClassFinder\ClassFinder;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\FileNotFoundException;
@@ -316,6 +318,30 @@ $container[SimpleClient::class] = static function (
             $client->bindCommand($class, $callable, $class);
         }
     }
+
+    return $client;
+};
+
+/**
+ * Create the google oauth client
+ *
+ * @return Client
+ */
+$container[Client::class] = static function (RouteParserInterface $routeParser, SettingsInterface $settings) {
+    $config = $settings->get(Client::class);
+
+    $host = $settings->get('baseUrl');
+    $route = $routeParser->urlFor(LoginGoogleCallbackAction::NAME);
+    $redirectUri = 'https://' . $host . $route;
+
+    $client = new Client();
+    $client->setApplicationName($config['application_name']);
+    $client->setIncludeGrantedScopes(true);
+    $client->setScopes($config['scopes']);
+    $client->setAuthConfig($config['secret_file']);
+    $client->setAccessType('offline'); // default
+    $client->setPrompt('select_account consent'); // default
+    $client->setRedirectUri($redirectUri);
 
     return $client;
 };
