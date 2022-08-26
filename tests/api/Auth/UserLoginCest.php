@@ -1,4 +1,5 @@
 <?php
+
 namespace Test\Api\Auth;
 
 use ApiTester;
@@ -20,6 +21,25 @@ class UserLoginCest
     }
 
     /**
+     * Verify that the login request failed and that it contains the expected data
+     *
+     * @param ApiTester $I
+     *
+     * @return void
+     */
+    private function expectLoginFailed(ApiTester $I)
+    {
+        $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
+        $I->seeResponseIsJson();
+        $I->seeResponseJsonHasValue('$.success', false);
+        $I->seeResponseJsonHasValue('$.message', 'Username or password invalid');
+        $I->seeResponseJsonHasValue('$.error.message', 'Username or password invalid');
+        $I->seeResponseJsonHasValue('$.error.fields[0].field', 'username');
+        $I->seeResponseJsonHasValue('$.error.fields[0].message', 'Username or password invalid');
+        $I->dontSeeResponseJsonMatchesJsonPath('$.error.fields[1]');
+    }
+
+    /**
      * Try to login with the correct user data
      *
      * @param ApiTester $I
@@ -33,22 +53,6 @@ class UserLoginCest
             'password' => 'admin',
         ]);
         $this->expectLoginSuccessful($I);
-    }
-
-    /**
-     * Try to login with invalid user data
-     *
-     * @param ApiTester $I
-     *
-     * @return void
-     */
-    public function tryToLoginWithInvalidData(ApiTester $I)
-    {
-        $I->sendPost('/v1/auth/login', [
-            'username' => 'admin',
-            'password' => 'wrong password',
-        ]);
-        $this->expectLoginFailed($I);
     }
 
     /**
@@ -68,21 +72,18 @@ class UserLoginCest
     }
 
     /**
-     * Verify that the login request failed and that it contains the expected data
+     * Try to login with invalid user data
      *
      * @param ApiTester $I
      *
      * @return void
      */
-    private function expectLoginFailed(ApiTester $I)
+    public function tryToLoginWithInvalidData(ApiTester $I)
     {
-        $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
-        $I->seeResponseIsJson();
-        $I->seeResponseJsonHasValue('$.success', false);
-        $I->seeResponseJsonHasValue('$.message', 'Authentication failed');
-        $I->seeResponseJsonHasValue('$.error.message', 'Username or password invalid');
-        $I->seeResponseJsonHasValue('$.error.fields[0].field', 'username');
-        $I->seeResponseJsonHasValue('$.error.fields[0].message', 'Username or password invalid');
-        $I->dontSeeResponseJsonMatchesJsonPath('$.error.fields[1]');
+        $I->sendPost('/v1/auth/login', [
+            'username' => 'admin',
+            'password' => 'wrong password',
+        ]);
+        $this->expectLoginFailed($I);
     }
 }

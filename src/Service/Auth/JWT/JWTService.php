@@ -98,6 +98,26 @@ class JWTService
     }
 
     /**
+     * Extract a private key from a file
+     *
+     * @param string $file
+     * @param string $password
+     *
+     * @return string
+     */
+    public function extractPrivateKeyFromFile(string $file, string $password): string
+    {
+        $content = file_get_contents($file);
+        $privateKey = openssl_pkey_get_private($content, $password);
+        $key = null;
+        openssl_pkey_export($privateKey, $key);
+        $key = str_replace('-----END PRIVATE KEY-----', '', $key);
+        $key = str_replace('-----BEGIN PRIVATE KEY-----', '', $key);
+
+        return trim($key);
+    }
+
+    /**
      * Create a refresh token based on the WJT
      *
      * @param string $jwt
@@ -115,6 +135,24 @@ class JWTService
         $this->jwtRepository->saveJWTToken($userId, $jwt, $refreshToken, $issuedAt, $expiredAt, $userId);
 
         return $refreshToken;
+    }
+
+    /**
+     * Check if a JWT token is still valid (not expired)
+     *
+     * @param string $token
+     *
+     * @return bool
+     */
+    public function isValid(string $token): bool
+    {
+        try {
+            $decoded = $this->decodeJWT($token);
+
+            return $decoded['exp'] > time();
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
     /**
@@ -142,43 +180,5 @@ class JWTService
         } catch (Exception $e) {
             throw new AuthenticationException(HttpCode::UNAUTHORIZED, __('Not authorized'), 0, $e);
         }
-    }
-
-    /**
-     * Check if a JWT token is still valid (not expired)
-     *
-     * @param string $token
-     *
-     * @return bool
-     */
-    public function isValid(string $token): bool
-    {
-        try {
-            $decoded = $this->decodeJWT($token);
-
-            return $decoded['exp'] > time();
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
-    /**
-     * Extract a private key from a file
-     *
-     * @param string $file
-     * @param string $password
-     *
-     * @return string
-     */
-    public function extractPrivateKeyFromFile(string $file, string $password): string
-    {
-        $content = file_get_contents($file);
-        $privateKey = openssl_pkey_get_private($content, $password);
-        $key = null;
-        openssl_pkey_export($privateKey, $key);
-        $key = str_replace('-----END PRIVATE KEY-----', '', $key);
-        $key = str_replace('-----BEGIN PRIVATE KEY-----', '', $key);
-
-        return trim($key);
     }
 }

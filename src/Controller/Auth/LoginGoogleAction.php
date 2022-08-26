@@ -4,7 +4,6 @@ namespace App\Controller\Auth;
 
 use App\Service\Auth\OAuth\AuthGoogleService;
 use App\Service\Encoder\JSONEncoder;
-use Google\Client;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -41,6 +40,7 @@ class LoginGoogleAction
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $uri = $this->google->getRedirectUrl();
+
         return $this->json->encode($response, [
             'message' => __('Redirecting you now'),
             'success' => true,

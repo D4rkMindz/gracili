@@ -4,6 +4,13 @@ use App\Service\SettingsInterface;
 use Cake\Database\Connection;
 use Cake\Database\Driver\Mysql;
 
+/**
+ * The database connection for testing
+ *
+ * @param SettingsInterface $settings
+ *
+ * @return Connection
+ */
 $container[Connection::class] = static function (SettingsInterface $settings) {
     $config = $settings->get('db');
     $driver = new Mysql([

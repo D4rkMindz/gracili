@@ -1,23 +1,5 @@
 # your-app
 
-## TODOs
-
-### Purchase
-
-Purchase cancel Purchase error also check if cell is available for purchase on view action, not only on submit
-
-Refund needs to be done via mail (for now)
-
-### Message update
-
-### MAP
-
-THE WHOLE MAP
-
-### User Account
-
-User administration for account info
-
 ## Installation
 
 ### Prequisites
@@ -27,7 +9,7 @@ You need following tools installed:
 - [PHP](https://php.net) - at least 7.3, 7.4 recommended
 - [MySQL](https://www.mysql.com) - RDBMS Database
 - Web Server, either one of them
-    - [XAMPP](https://www.apachefriends.org/index.html) on Windows (or Mac)
+    - [XAMPP](https://www.apachefriends.org/index.html) on Windows (or Mac, if you really are that person...)
     - [valet](https://laravel.com/docs/5.8/valet) on Mac
     - [Apache](http://apache.org/) on Linux
 - [composer](https://getcomposer.org) - Dependency Manager

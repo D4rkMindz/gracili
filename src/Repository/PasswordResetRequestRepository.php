@@ -66,7 +66,7 @@ class PasswordResetRequestRepository extends AppRepository
             return $result;
         }
 
-        throw new RecordNotFoundException('Password reset request not found', json_encode($where));
+        throw new RecordNotFoundException(__('Password reset request not found'), json_encode($where));
     }
 
     /**
@@ -137,12 +137,12 @@ class PasswordResetRequestRepository extends AppRepository
     /**
      * Create a password reset request
      *
-     * @param int $userId
-     * @param int $executorId
+     * @param int      $userId
+     * @param int|null $executorId
      *
      * @return int
      */
-    public function createRequest(int $userId, int $executorId): int
+    public function createRequest(int $userId, ?int $executorId = 0): int
     {
         $token = UUID::generate();
         $expiresAt = new Moment();
@@ -152,7 +152,7 @@ class PasswordResetRequestRepository extends AppRepository
             'user_id' => $userId,
             'token' => $token,
             'expires_at' => $expiresAt->format('Y-m-d H:i:s'),
-        ])->lastInsertId();
+        ], $executorId)->lastInsertId();
     }
 
     /**
@@ -173,17 +173,44 @@ class PasswordResetRequestRepository extends AppRepository
     /**
      * Set a password reset request as confirmed
      *
-     * @param string $requestId
-     * @param int    $executorId
+     * @param string   $requestId
+     * @param int|null $executorId
      *
      * @return bool
      */
-    public function setConfirmed(string $requestId, int $executorId): bool
+    public function setConfirmed(string $requestId, ?int $executorId = 0): bool
     {
         return $this->passwordResetRequestTable->update(
             ['confirmed_at' => (new Moment())->format('Y-m-d H:i:s')],
             ['id' => $requestId],
             $executorId
         );
+    }
+
+    /**
+     * Archive all Password Reset Request by user
+     *
+     * @param int      $userId
+     * @param int|null $executorId
+     *
+     * @return int
+     */
+    public function archiveAllPWResetRequestsForUser(int $userId, ?int $executorId = 0): int
+    {
+        return $this->passwordResetRequestTable->archiveAll(['user_id' => $userId], $executorId);
+    }
+
+    /**
+     * Delete all Password Reset Request by user
+     *
+     * USE WITH CAUTION! Should only be used on data delete requests
+     *
+     * @param int $userId
+     *
+     * @return int
+     */
+    public function deleteAllPWResetRequestsForUser(int $userId): int
+    {
+        return $this->passwordResetRequestTable->deleteAll(['user_id' => $userId]);
     }
 }

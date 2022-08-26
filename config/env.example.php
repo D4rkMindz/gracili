@@ -1,10 +1,7 @@
 <?php
 
-use App\Service\Mailer\Adapter\DebugMailAdapter;
 use App\Service\Mailer\Adapter\MailgunAdapter;
-use ConvertApi\ConvertApi;
 use Firebase\JWT\JWT;
-use Stripe\Stripe;
 
 $env = [];
 

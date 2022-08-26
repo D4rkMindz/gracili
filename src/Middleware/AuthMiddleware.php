@@ -17,6 +17,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Slim\App;
+use Slim\Interfaces\RouteInterface;
 use Slim\Routing\RouteContext;
 
 /**
@@ -92,8 +93,10 @@ class AuthMiddleware implements MiddlewareInterface
             throw new InvalidArgumentException('MISCONFIGURATION: Action ' . $route->getCallable() . ' does not have the authorization method implemented. Either add the AuthorizationInterface or define the Route as public');
         }
 
-        $classes = ClassFinder::getClassesInNamespace('App\\Service\\Auth\\AuthorizationRules',
-            ClassFinder::RECURSIVE_MODE);
+        $classes = ClassFinder::getClassesInNamespace(
+            'App\\Service\\Auth\\AuthorizationRules',
+            ClassFinder::RECURSIVE_MODE
+        );
 
         $override = false;
         foreach ($classes as $class) {
@@ -108,7 +111,14 @@ class AuthMiddleware implements MiddlewareInterface
         $canPass = false;
         if ($override !== true) {
             $callable = $this->container->get($route->getCallable());
-            $canPass = call_user_func([$callable, 'authorize'], $request); // needs to instantiate the callable...
+            /** @var RouteInterface $route */
+            $route = $request->getAttribute(RouteContext::ROUTE);
+            // needs to instantiate the callable...
+            $canPass = call_user_func(
+                [$callable, 'authorize'],
+                $request,
+                $route->getArguments()
+            );
         }
         if ($override || $canPass === true) {
             return $handler->handle($request);

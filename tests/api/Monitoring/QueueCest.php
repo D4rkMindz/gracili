@@ -2,16 +2,15 @@
 
 namespace Test\Api\Monitoring;
 
+require_once __DIR__ . '/../../../resources/seeds/UserSeed.php';
+
 use ApiTester;
 use App\Type\HttpCode;
 use Codeception\Example;
+use UserSeed;
 
 class QueueCest
 {
-    public function _before(ApiTester $I)
-    {
-    }
-
     /**
      * Test if the correct running queue count is returned
      *
@@ -23,7 +22,7 @@ class QueueCest
     {
         $expectedCount = exec('sh ' . __DIR__ . '/../../../bin/enqueue/count.sh');
 
-        $I->amJWTAuthenticated('security_admin');
+        $I->amJWTAuthenticated(UserSeed::SECURITY_ADMIN);
         $I->sendGet('/v1/monitoring/queue');
         $I->seeResponseCodeIs(HttpCode::OK);
         $I->seeResponseIsJson();
@@ -52,8 +51,8 @@ class QueueCest
     protected function unauthorizedUsersProvider(): array
     {
         return [
-            ['admin'],
-            ['user'],
+            [UserSeed::ADMIN],
+            [UserSeed::USER],
         ];
     }
 }

@@ -26,8 +26,6 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Log\LoggerInterface;
-use PSR7Sessions\Storageless\Http\SessionMiddleware;
-use PSR7Sessions\Storageless\Session\SessionInterface;
 use Slim\App;
 use Slim\Factory\AppFactory;
 use Slim\Interfaces\RouteCollectorInterface;

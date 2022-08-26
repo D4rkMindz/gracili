@@ -17,33 +17,34 @@ class UserValidation extends AppValidation
      *
      * @param UserRepository $userRepository
      */
-    public function __construct(
-        UserRepository $userRepository
-    ) {
+    public function __construct(UserRepository $userRepository)
+    {
         $this->userRepository = $userRepository;
     }
 
     /**
      * Validate the creation of a user
      *
-     * @param string $email
-     * @param string $password
-     * @param string $firstName
-     * @param string $lastName
-     * @param bool   $acceptTC
+     * @param string|null $email
+     * @param string|null $password
+     * @param string|null $firstName
+     * @param string|null $lastName
      */
     public function validateCreation(
-        string $email,
-        string $password,
-        string $firstName,
-        string $lastName
+        ?string $email,
+        ?string $password,
+        ?string $firstName,
+        ?string $lastName
     ) {
         $validationResult = new ValidationResult(__('Please check your data'));
 
         $this->validateEmail($email, $validationResult);
         $this->validatePassword($password, $validationResult);
         $this->validateName($firstName, 'first_name', $validationResult);
-        $this->validateName($lastName, 'last_name', $validationResult);
+        // last name is optional
+        if (!empty($lastName)) {
+            $this->validateName($lastName, 'last_name', $validationResult);
+        }
 
         $this->throwOnError($validationResult);
     }
@@ -108,36 +109,21 @@ class UserValidation extends AppValidation
      * Validate the modification of a user
      *
      * @param int         $userId
-     * @param int         $executorId
      * @param string|null $username
      * @param string|null $email
      * @param string|null $password
      * @param string|null $firstName
      * @param string|null $lastName
-     * @param string|null $street
-     * @param string|null $zip
-     * @param string|null $city
      */
     public function validateModification(
         int $userId,
-        int $executorId,
         ?string $username,
         ?string $email,
         ?string $password,
         ?string $firstName,
-        ?string $lastName,
-        ?string $street,
-        ?string $zip,
-        ?string $city
+        ?string $lastName
     ) {
         $validationResult = new ValidationResult(__('Please check your data'));
-
-        if ($userId !== $executorId) {
-            $validationResult->setError('user', __('You cannot edit this user!'));
-            $this->throwOnError($validationResult);
-
-            return;
-        }
 
         if (!empty($username)) {
             $this->validateUsername($username, $validationResult);
@@ -153,15 +139,6 @@ class UserValidation extends AppValidation
         }
         if (!empty($lastName)) {
             $this->validateName($lastName, 'last_name', $validationResult);
-        }
-        if (!empty($street)) {
-            $this->validateStreet($street, $validationResult);
-        }
-        if (!empty($zip)) {
-            $this->validateZip($zip, $validationResult);
-        }
-        if (!empty($city)) {
-            $this->validateCity($city, $validationResult);
         }
 
         $this->throwOnError($validationResult);
@@ -223,41 +200,5 @@ class UserValidation extends AppValidation
             // TODO Maybe inform the real user about the sign up attempt -> userdata key
             $validationResult->setError('email', __('Email is already registered for another user.'));
         }
-    }
-
-    /**
-     * Validate the zip
-     *
-     * @param string           $street
-     * @param ValidationResult $validationResult
-     */
-    public function validateStreet(string $street, ValidationResult $validationResult)
-    {
-        $this->validateLengthMin($street, 'street', $validationResult, 2);
-        $this->validateLengthMax($street, 'street', $validationResult, 255);
-    }
-
-    /**
-     * Validate the zip
-     *
-     * @param string           $zip
-     * @param ValidationResult $validationResult
-     */
-    public function validateZip(string $zip, ValidationResult $validationResult)
-    {
-        $this->validateLengthMin($zip, 'zip', $validationResult, 3);
-        $this->validateLengthMax($zip, 'zip', $validationResult, 10);
-    }
-
-    /**
-     * Validate the city
-     *
-     * @param string           $city
-     * @param ValidationResult $validationResult
-     */
-    public function validateCity(string $city, ValidationResult $validationResult)
-    {
-        $this->validateLengthMin($city, 'city', $validationResult, 2);
-        $this->validateLengthMax($city, 'city', $validationResult, 255);
     }
 }

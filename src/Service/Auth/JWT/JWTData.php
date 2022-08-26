@@ -21,6 +21,16 @@ class JWTData
     private array $data;
 
     /**
+     * JWTData constructor.
+     *
+     * @param stdClass|null $data
+     */
+    public function __construct(?stdClass $data)
+    {
+        $this->data = json_decode(json_encode($data), true);
+    }
+
+    /**
      * parse out of request
      *
      * @param ServerRequestInterface $request
@@ -36,16 +46,6 @@ class JWTData
         }
 
         return new JWTData(new stdClass());
-    }
-
-    /**
-     * JWTData constructor.
-     *
-     * @param stdClass|null $data
-     */
-    public function __construct(?stdClass $data)
-    {
-        $this->data = json_decode(json_encode($data), true);
     }
 
     /**

@@ -15,8 +15,9 @@ interface AuthorizationInterface
      * This method verifies, that a user is actually allowed to request a resource
      *
      * @param ServerRequestInterface $request
+     * @param array                  $args
      *
      * @return bool
      */
-    public function authorize(ServerRequestInterface $request): bool;
+    public function authorize(ServerRequestInterface $request, array $args): bool;
 }

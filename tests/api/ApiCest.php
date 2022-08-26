@@ -3,7 +3,6 @@
 namespace Test\Api;
 
 use ApiTester;
-use Slim\App;
 
 /**
  * Class ApiCest

@@ -3,10 +3,10 @@
 use App\Controller\Auth\LoginAction;
 use App\Controller\Auth\LoginGoogleAction;
 use App\Controller\Auth\LoginGoogleCallbackAction;
+use App\Controller\Auth\RegisterAction;
 use App\Controller\IndexAction;
 use App\Queue\Extension\SignalHandler\AbortHandler;
 use App\Queue\ProcessorInterface;
-use App\Service\Auth\JWT\JWTData;
 use App\Service\GeoIP\GeoIPService;
 use App\Service\Mailer\Adapter\DebugMailAdapter;
 use App\Service\Mailer\Adapter\MailerAdapterInterface;
@@ -45,7 +45,7 @@ $config = [
     'contact' => [
         'name' => 'Your App',
         'email' => 'contact@your-domain.com',
-    ]
+    ],
 ];
 
 $config['migrations'] = __DIR__ . '/../resources/migrations';
@@ -69,7 +69,6 @@ $config['db'] = [
 
 $config[JWT::class] = [
     'secret_file' => ['path' => '', 'password' => ''], // usually in data/config/jwt/private.pem
-    'attribute' => JWTData::REQUEST_ATTRIBUTE,
     'header' => 'Authorization',
     'regexp' => '/(.*)$/i',
     'algorithm' => ['HS512'],
@@ -85,6 +84,7 @@ $config['auth'] = [
     ],
     'relaxed' => [
         IndexAction::ROUTE => true,
+        RegisterAction::NAME => true,
         LoginAction::NAME => true,
         LoginGoogleAction::NAME => true,
         LoginGoogleCallbackAction::NAME => true,
@@ -98,7 +98,7 @@ $config[\Google\Client::class] = [
         'https://www.googleapis.com/auth/userinfo.profile', // public user information
     ],
     'secret_file' => '', // usually in data/config/oauth/client_secret.json
-    'redirect_uri' => 'https://cevi.dev/v1/auth/google/callback'
+    'redirect_uri' => 'https://cevi.dev/v1/auth/google/callback',
 ];
 
 $config[Translator::class] = [

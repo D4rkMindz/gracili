@@ -7,6 +7,7 @@ namespace App\Type;
  */
 class Language
 {
+    public const DEFAULT = 'en_GB';
     public const DE_CH = 'de_CH';
     public const FR_CH = 'fr_CH';
     public const EN_GB = 'en_GB';
@@ -47,6 +48,6 @@ class Language
             return false;
         }
 
-        return Language::EN_GB;
+        return Language::DEFAULT;
     }
 }

@@ -8,7 +8,7 @@ use App\Util\SimpleLogger;
 /**
  * Mailer container.
  *
- * @param SimpleLogger $logger
+ * @param SimpleLogger      $logger
  * @param SettingsInterface $settings
  *
  * @return MailerAdapterInterface

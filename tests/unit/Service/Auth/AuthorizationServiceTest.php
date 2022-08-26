@@ -14,11 +14,6 @@ class AuthorizationServiceTest extends \Codeception\Test\Unit
     protected UnitTester $tester;
     protected AuthorizationService $authorizationService;
 
-    protected function _before()
-    {
-        $this->authorizationService = $this->tester->getContainer()->get(AuthorizationService::class);
-    }
-
     /**
      * Test the hasRole method
      *
@@ -34,6 +29,41 @@ class AuthorizationServiceTest extends \Codeception\Test\Unit
     {
         $actual = $this->authorizationService->hasRole($userId, $role);
         $this->assertSame($expected, $actual);
+    }
+
+    /**
+     * Data provider for testHasRole
+     *
+     * @return array
+     */
+    public function hasRole(): array
+    {
+        require_once __DIR__ . '/../../../../resources/seeds/UserSeed.php';
+
+        // directly = assigned as role
+        // indirectly = assigned via group
+        return [
+            Role::ADMIN . ' for admin user (directly)' => [
+                UserSeed::USER_ID['admin'],
+                Role::ADMIN,
+                true,
+            ],
+            Role::MONITORING_QUEUE . ' for security_admin user (indirectly)' => [
+                UserSeed::USER_ID[UserSeed::SECURITY_ADMIN],
+                Role::MONITORING_QUEUE,
+                true,
+            ],
+            Role::SECURITY_ADMIN . ' for admin user' => [
+                UserSeed::USER_ID[UserSeed::ADMIN],
+                Role::SECURITY_ADMIN,
+                false,
+            ],
+            Role::SECURITY_ADMIN . ' for inexistent user id 250' => [
+                UserSeed::USER_ID[UserSeed::ADMIN],
+                Role::SECURITY_ADMIN,
+                false,
+            ],
+        ];
     }
 
     /**
@@ -58,40 +88,6 @@ class AuthorizationServiceTest extends \Codeception\Test\Unit
      *
      * @return array
      */
-    public function hasRole(): array
-    {
-        require_once __DIR__ . '/../../../../resources/seeds/UserSeed.php';
-
-        // directly = assigned as role
-        // indirectly = assigned via group
-        return [
-            Role::ADMIN . ' for admin user (directly)' => [
-                UserSeed::USER['admin'],
-                Role::ADMIN,
-                true,
-            ],
-            Role::MONITORING_QUEUE . ' for security_admin user (indirectly)' => [
-                UserSeed::USER['security_admin'],
-                Role::MONITORING_QUEUE,
-                true,
-            ],
-            Role::SECURITY_ADMIN . ' for admin user' => [
-                UserSeed::USER['admin'],
-                Role::SECURITY_ADMIN,
-                false,
-            ],
-            Role::SECURITY_ADMIN . ' for inexistent user id 250' => [
-                UserSeed::USER['admin'],
-                Role::SECURITY_ADMIN,
-                false,
-            ],
-        ];
-    }
-    /**
-     * Data provider for testHasRole
-     *
-     * @return array
-     */
     public function hasGroup(): array
     {
         require_once __DIR__ . '/../../../../resources/seeds/UserSeed.php';
@@ -100,12 +96,12 @@ class AuthorizationServiceTest extends \Codeception\Test\Unit
         // indirectly = assigned via group
         return [
             Group::ADMIN . ' for admin user' => [
-                UserSeed::USER['admin'],
+                UserSeed::USER_ID['admin'],
                 Group::ADMIN,
                 true,
             ],
             Group::USER . ' for admin user' => [
-                UserSeed::USER['admin'],
+                UserSeed::USER_ID['admin'],
                 Group::USER,
                 false,
             ],
@@ -115,5 +111,10 @@ class AuthorizationServiceTest extends \Codeception\Test\Unit
                 false,
             ],
         ];
+    }
+
+    protected function _before()
+    {
+        $this->authorizationService = $this->tester->getContainer()->get(AuthorizationService::class);
     }
 }

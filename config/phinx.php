@@ -13,6 +13,7 @@ $app = require __DIR__ . '/bootstrap.php';
 $container = $app->getContainer();
 $pdo = $container->get(Connection::class)->getDriver()->getConnection();
 $pdoTest = $container->get(Connection::class . '_test')->getDriver()->getConnection();
+
 return [
     'paths' => [
         'migrations' => $container->get(SettingsInterface::class)->get('migrations'),

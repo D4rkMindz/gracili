@@ -18,7 +18,7 @@ class ValidationResult
      */
     public function __construct(?string $message = 'Please check your data')
     {
-        $this->message = $message === 'Please check your data' ? 'Please check your data' : $message;
+        $this->message = $message === 'Please check your data' ? __('Please check your data') : $message;
     }
 
     /**

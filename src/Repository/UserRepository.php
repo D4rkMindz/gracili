@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Exception\RecordNotFoundException;
+use App\Table\AppTable;
 use App\Table\UserTable;
 use Moment\Moment;
 
@@ -131,29 +132,87 @@ class UserRepository extends AppRepository
      *
      * @param int $userId
      *
-     * @return mixed
+     * @return array
      * @throws RecordNotFoundException
      */
-    public function getUserById(int $userId)
+    public function getUserById(int $userId): array
     {
         $query = $this->userTable->newSelect();
         $query->select([
-            'id',
-            'username',
-            'password',
-            'email',
-            'first_name',
-            'last_name',
-            'last_login_at',
+            'id' => 'user.id',
+            'username' => 'user.username',
+            'email' => 'user.email',
+            'first_name' => 'user.first_name',
+            'last_name' => 'user.last_name',
+            'last_login_at' => 'user.last_login_at',
+            'language-id' => 'language.id',
+            'language-tag' => 'language.tag',
+            'language-name' => 'language.name',
+            'language-english_name' => 'language.english_name',
         ])
-            ->where(['id' => $userId]);
+            ->join([
+                'language' => [
+                    'table' => 'language',
+                    'type' => 'INNER',
+                    'conditions' => 'user.language_id = language.id',
+                ],
+            ])
+            ->where(['user.id' => $userId]);
         $user = $query->execute()->fetch('assoc');
 
         if (!empty($user)) {
-            return $user;
+            return AppTable::recursify($user);
         }
 
         throw new RecordNotFoundException(__('User not found'), (string)$userId);
+    }
+
+    /**
+     * Get all users
+     *
+     * @param int|null $limit
+     * @param int|null $offset
+     *
+     * @return array
+     * @throws RecordNotFoundException
+     */
+    public function getAllUsers(?int $limit = null, ?int $offset = null): array
+    {
+        $query = $this->userTable->newSelect();
+        $query->select([
+            'id' => 'user.id',
+            'username' => 'user.username',
+            'email' => 'user.email',
+            'first_name' => 'user.first_name',
+            'last_name' => 'user.last_name',
+            'last_login_at' => 'user.last_login_at',
+            'language-id' => 'language.id',
+            'language-tag' => 'language.tag',
+            'language-name' => 'language.name',
+            'language-english_name' => 'language.english_name',
+        ])
+            ->join([
+                'language' => [
+                    'table' => 'language',
+                    'type' => 'INNER',
+                    'conditions' => 'user.language_id = language.id',
+                ],
+            ]);
+        if ($limit !== null) {
+            $query->limit($limit);
+        }
+
+        if ($offset !== null) {
+            $query->offset($offset);
+        }
+
+        $result = $query->execute()->fetchAll('assoc');
+
+        if (!empty($result)) {
+            return AppTable::recursify($result);
+        }
+
+        throw new RecordNotFoundException(__('No users found'), 'count = ' . $limit . ' offset = ' . $offset);
     }
 
     /**
@@ -215,15 +274,15 @@ class UserRepository extends AppRepository
     /**
      * Create the user
      *
-     * @param int    $languageId
-     * @param string $username
-     * @param string $email
-     * @param string $firstName
-     * @param string $lastName
-     * @param string $password
-     * @param string $registrationMethod
-     * @param bool   $emailVerified
-     * @param int    $executorId
+     * @param int         $languageId
+     * @param string      $username
+     * @param string      $email
+     * @param string      $password
+     * @param string      $firstName
+     * @param string|null $lastName
+     * @param string|null $registrationMethod
+     * @param bool        $emailVerified
+     * @param int         $executorId
      *
      * @return int
      */
@@ -231,12 +290,12 @@ class UserRepository extends AppRepository
         int $languageId,
         string $username,
         string $email,
-        string $firstName,
-        string $lastName,
         string $password,
-        string $registrationMethod,
-        bool $emailVerified,
-        int $executorId
+        string $firstName,
+        ?string $lastName,
+        ?string $registrationMethod,
+        bool $emailVerified = false,
+        int $executorId = 0
     ): int {
         $user = [
             'language_id' => $languageId,
@@ -249,19 +308,24 @@ class UserRepository extends AppRepository
             'password' => password_hash($password, PASSWORD_DEFAULT),
         ];
 
-        return (int)$this->userTable->insert($user, $executorId)->lastInsertId();
+        $userId = (int)$this->userTable->insert($user, $executorId, ['email_verified' => 'boolean'])->lastInsertId();
+        if ($executorId === 0) {
+            $this->userTable->update([], ['id' => $userId], $userId);
+        }
+
+        return $userId;
     }
 
     /**
      * Set the last login date of a user
      *
-     * @param int    $userId
-     * @param string $datetime
-     * @param int    $executorId
+     * @param int      $userId
+     * @param string   $datetime
+     * @param int|null $executorId
      *
      * @return bool
      */
-    public function setLastLogin(int $userId, string $datetime, int $executorId): bool
+    public function setLastLogin(int $userId, string $datetime, ?int $executorId = 0): bool
     {
         return $this->userTable->update(['last_login_at' => $datetime], ['id' => $userId], $executorId);
     }
@@ -271,6 +335,7 @@ class UserRepository extends AppRepository
      *
      * @param int         $userId
      * @param int         $executorId
+     * @param int|null    $languageId
      * @param string|null $username
      * @param string|null $email
      * @param string|null $firstName
@@ -282,14 +347,18 @@ class UserRepository extends AppRepository
     public function modifyUser(
         int $userId,
         int $executorId,
-        ?string $username,
-        ?string $email,
-        ?string $firstName,
-        ?string $lastName,
-        ?string $password,
+        ?int $languageId = null,
+        ?string $username = null,
+        ?string $email = null,
+        ?string $firstName = null,
+        ?string $lastName = null,
+        ?string $password = null,
     ): bool {
         $row = [];
 
+        if (!empty($languageId)) {
+            $row['language_id'] = $languageId;
+        }
         if (!empty($username)) {
             $row['username'] = $username;
         }
@@ -301,13 +370,14 @@ class UserRepository extends AppRepository
         }
         if (!empty($email)) {
             $row['email'] = $email;
+            $row['email_verified'] = false;
         }
         if (!empty($password)) {
             $row['password'] = password_hash($password, PASSWORD_DEFAULT);
         }
 
         if (!empty($row)) {
-            return $this->userTable->update($row, ['id' => $userId], $executorId);
+            return $this->userTable->update($row, ['id' => $userId], $executorId, ['email_verified' => 'boolean']);
         }
 
         return false;
@@ -316,13 +386,27 @@ class UserRepository extends AppRepository
     /**
      * Archive a user.
      *
-     * @param int $userId
-     * @param int $executorId
+     * @param int      $userId
+     * @param int|null $executorId
      *
      * @return bool
      */
-    public function archiveUser(int $userId, int $executorId): bool
+    public function archiveUser(int $userId, ?int $executorId = 0): bool
     {
         return $this->userTable->archive($userId, $executorId);
+    }
+
+    /**
+     * Delete a user
+     *
+     * HANDLE WITH CARE
+     *
+     * @param int $userId
+     *
+     * @return bool
+     */
+    public function deleteUser(int $userId): bool
+    {
+        return $this->userTable->delete($userId);
     }
 }

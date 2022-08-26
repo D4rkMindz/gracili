@@ -9,6 +9,7 @@ actor_suffix: Tester
 extensions:
     enabled:
         - EnvironmentExtension
+        - CleanUpDatabaseExtension
         - Codeception\Extension\RunFailed
 settings:
     shuffle: false

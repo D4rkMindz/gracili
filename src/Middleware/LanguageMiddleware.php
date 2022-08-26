@@ -158,7 +158,7 @@ class LanguageMiddleware implements MiddlewareInterface
 
         $resource = __DIR__ . '/../../resources/locale/' . $locale . '_messages.mo';
         $this->translator->setLocale($locale);
-        $this->translator->setFallbackLocales([Language::EN_GB]);
+        $this->translator->setFallbackLocales([Language::DEFAULT]);
         $this->translator->addResource('mo', $resource, $locale);
     }
 }

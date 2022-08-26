@@ -5,7 +5,7 @@ use Cake\Database\Connection;
 use Cake\Database\Driver\Mysql;
 
 /**
- * Connection for phinx migrations
+ * The database connection for phinx migrations
  *
  * @param SettingsInterface $settings
  *

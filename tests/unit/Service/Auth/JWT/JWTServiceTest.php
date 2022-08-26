@@ -17,11 +17,6 @@ class JWTServiceTest extends \Codeception\Test\Unit
     protected UnitTester $tester;
     protected JWTService $jwtService;
 
-    protected function _before()
-    {
-        $this->jwtService = $this->tester->getContainer()->get(JWTService::class);
-    }
-
     /**
      * Test the generation of a JWT
      *
@@ -57,5 +52,10 @@ class JWTServiceTest extends \Codeception\Test\Unit
         $this->assertSame(Group::SECURITY_ADMIN, $data['groups'][0]);
         $this->assertArrayHasKey('locale', $data);
         $this->assertSame(Language::EN_GB, $data['locale']);
+    }
+
+    protected function _before()
+    {
+        $this->jwtService = $this->tester->getContainer()->get(JWTService::class);
     }
 }

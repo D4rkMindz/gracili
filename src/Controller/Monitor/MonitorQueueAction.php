@@ -12,6 +12,9 @@ use App\Type\Auth\Role;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Class MonitorQueueAction
+ */
 class MonitorQueueAction implements AuthorizationInterface
 {
     public const NAME = 'api.v1.monitoring.queue.get';
@@ -54,10 +57,11 @@ class MonitorQueueAction implements AuthorizationInterface
      * This method verifies, that a user is actually allowed to request this resource
      *
      * @param ServerRequestInterface $request
+     * @param array                  $args
      *
      * @return bool
      */
-    public function authorize(ServerRequestInterface $request): bool
+    public function authorize(ServerRequestInterface $request, array $args): bool
     {
         $userHash = JWTData::fromRequest($request)->get(JWTData::USER_HASH);
         $userId = HashID::decodeSingle($userHash);

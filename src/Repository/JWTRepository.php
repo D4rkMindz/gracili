@@ -80,4 +80,31 @@ class JWTRepository extends AppRepository
 
         throw new RecordNotFoundException(__('Token not found'), 'user_id = ' . $userId);
     }
+
+    /**
+     * Archive all JWT Tokens of a user
+     *
+     * @param int      $userId
+     * @param int|null $executorId
+     *
+     * @return int
+     */
+    public function archiveAllJWTTokensOfUser(int $userId, ?int $executorId = 0): int
+    {
+        return $this->jwtTable->archiveAll(['user_id' => $userId], $executorId);
+    }
+
+    /**
+     * Delete all JWT Tokens of a user
+     *
+     * USE WITH CAUTION! Should only be used on data delete requests
+     *
+     * @param int $userId
+     *
+     * @return int
+     */
+    public function deleteAllJWTTokensOfUser(int $userId): int
+    {
+        return $this->jwtTable->deleteAll(['user_id' => $userId]);
+    }
 }
